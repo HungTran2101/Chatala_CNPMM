@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #ecf2f7;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.epr-body::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 2px;
+}
+
+.epr-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.epr-body::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #c9d9e5;
+}
+
+.epr-search {
+  border-radius: 24px !important;
+}
