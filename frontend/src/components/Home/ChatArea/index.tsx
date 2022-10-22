@@ -68,15 +68,18 @@ const ChatArea = () => {
   const onSubmit = (values: FormValues, { setFieldValue }: any) => {
     if (values.msg !== '' || values.files.length > 0) {
       setToggleEmoji(false);
-      if (values.msg !== '') {
-        context.setRoomMsg([
-          { avatar: UserAvatar, msg: values.msg },
-          ...context.roomMsg,
-        ]);
-        chatInput.current!.innerText = '';
-      }
+      context.setRoomMsg([
+        {
+          ...context.roomMsg[0],
+          senderId: '',
+          msg: values.msg,
+          files: values.files,
+          unSend: false,
+        },
+        ...context.roomMsg,
+      ]);
+      chatInput.current!.innerText = '';
 
-      console.log(values);
       setFieldValue('msg', '');
       setFieldValue('files', []);
     }
@@ -104,7 +107,12 @@ const ChatArea = () => {
         </S.ChatAreaHeadInfo>
         <S.ChatAreaHeadOption onClick={() => setToggleOption(true)} />
       </S.ChatAreaHead>
-      {toggleOption && <MoreOptions setToggleOption={setToggleOption} />}
+      {toggleOption && (
+        <MoreOptions
+          roomInfo={context.roomInfo}
+          setToggleOption={setToggleOption}
+        />
+      )}
       <S.ChatAreaMain>
         <S.ChatAreaMainMsg>
           <S.ChatAreaMainMsgInner>

@@ -1,33 +1,48 @@
 import React, { createContext, useContext, useState } from 'react';
-import { messageType } from '../utils/types';
+import { messageType, registerType, roomType } from '../utils/types';
 
 export type GlobalContent = {
-  roomMsg: Array<messageType>;
-  registerInfo: any;
-  setRoomMsg: (value: any) => void;
-  setRegisterInfo: (value: any) => void;
+  roomMsg: messageType[];
+  setRoomMsg: (value: messageType[]) => void;
+  roomInfo: roomType;
+  setRoomInfo: (value: roomType) => void;
+  registerInfo: registerType;
+  setRegisterInfo: (value: registerType) => void;
 };
 
 export const GlobalContext = createContext<GlobalContent>({
   roomMsg: [],
-  registerInfo: {},
-  setRegisterInfo: () => {},
   setRoomMsg: () => {},
+  roomInfo: { roomName: '', isGroup: false, users: [] },
+  setRoomInfo: () => {},
+  registerInfo: { name: '', phoneNumber: '', password: '' },
+  setRegisterInfo: () => {},
 });
 
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export const GlobalProvider = ({ children }: any) => {
-  const [roomMsg, setRoomMsg] = useState([]);
-  const [registerInfo, setRegisterInfo] = useState({name: '', phoneNumber: '', password: ''});
+  const [roomMsg, setRoomMsg] = useState<messageType[]>([]);
+  const [roomInfo, setRoomInfo] = useState<roomType>({
+    roomName: '',
+    isGroup: false,
+    users: [],
+  });
+  const [registerInfo, setRegisterInfo] = useState<registerType>({
+    name: '',
+    phoneNumber: '',
+    password: '',
+  });
 
   return (
     <GlobalContext.Provider
       value={{
         roomMsg,
         setRoomMsg,
+        roomInfo,
+        setRoomInfo,
         registerInfo,
-        setRegisterInfo
+        setRegisterInfo,
       }}
     >
       {children}

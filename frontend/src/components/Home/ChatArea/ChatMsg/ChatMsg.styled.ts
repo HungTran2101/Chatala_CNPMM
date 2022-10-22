@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import tw from "twin.macro";
-import { FiMoreHorizontal } from "react-icons/fi";
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { FiMoreHorizontal } from 'react-icons/fi';
 
 export const ChatMsg = styled.div`
   ${tw`flex items-end my-5`}
@@ -35,10 +35,10 @@ export const ChatMsgLeft = styled(ChatMsg)`
   ${tw`relative`}
 
   ${ChatMsgText} {
-    ${tw`bg-secondary ml-2 rounded-bl-[0]`}
+    ${tw`bg-primary ml-2 rounded-bl-[0]`}
   }
   ${ChatMsgTextTail} {
-    ${tw`bg-secondary bottom-[-5px] left-[30px]`}
+    ${tw`bg-primary bottom-[-5px] left-[30px]`}
     &::before {
       ${tw`rounded-full absolute h-[50px] w-[50px] left-[-28px] bottom-[-3px]`}
       content: '';

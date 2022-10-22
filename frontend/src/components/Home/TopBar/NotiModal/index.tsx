@@ -22,7 +22,7 @@ const NotiModal = ({ setActiveNotiModal }: INotiModal) => {
         <S.NotiItem key={index}>
           <S.NotiInfo>
             <S.NotiAvatar>
-              <Image src={data.avatar} alt="avatar" />
+              <Image src={data.avatar} alt="avatar" layout='fill'/>
             </S.NotiAvatar>
             <S.NotiNameWrapper>
               <S.NotiName>{data.name}</S.NotiName>

@@ -50,7 +50,7 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.div`
-  ${tw`w-full flex justify-between items-center rounded-t-[50px] py-4 px-8 text-xl font-bold bg-[#7199ba]`}
+  ${tw`w-full flex justify-between items-center rounded-t-[50px] py-4 px-8 text-xl font-bold bg-darker`}
   &:nth-child(1) svg {
     ${tw`p-1 text-3xl rounded-[50%] cursor-pointer hover:bg-[rgba(0, 0, 0, 0.2)]`}
   }
@@ -70,7 +70,7 @@ export const Avatar = styled.figure`
 `;
 
 export const Content = styled.div`
-  ${tw`w-[88%] flex bg-[#7199ba] rounded-[50px] mt-[72px] mb-[32px] mx-auto`}
+  ${tw`w-[88%] flex bg-dark rounded-[50px] mt-[72px] mb-[32px] mx-auto`}
 `;
 
 export const Description = styled.div`
@@ -88,7 +88,7 @@ export const Info = styled.div`
 `;
 
 export const Button = styled.button`
-  ${tw`flex justify-center items-center w-[60%] text-lg bg-[#7199ba] rounded-[50px] py-1 px-2 mt-3 mx-auto mb-8 hover:opacity-80`}
+  ${tw`flex justify-center items-center w-[60%] text-lg bg-dark rounded-[50px] py-1 px-2 mt-3 mx-auto mb-8 opacity-80 hover:opacity-100`}
   & svg {
     ${tw`mr-1`}
   }

@@ -19,7 +19,7 @@ const AddFriend = ({ setToggleAddFriend }: IAddFriend) => {
           <S.AddFriendItem key={index}>
             <S.AddFriendInfo>
               <S.AddFriendAvatar>
-                <Image src={data.avatar} alt="avatar" />
+                <Image src={data.avatar} alt="avatar" layout='fill' />
               </S.AddFriendAvatar>
               <S.AddFriendNameWrapper>
                 <S.AddFriendName>{data.name}</S.AddFriendName>

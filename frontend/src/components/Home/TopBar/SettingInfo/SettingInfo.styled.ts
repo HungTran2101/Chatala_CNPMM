@@ -40,7 +40,7 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.div`
-  ${tw`w-full flex justify-between items-center rounded-t-[50px] py-4 px-8 text-xl font-bold bg-[#7199ba]`}
+  ${tw`w-full flex justify-between items-center rounded-t-[50px] py-4 px-8 text-xl font-bold bg-darker`}
   &:nth-child(1) svg {
     ${tw`p-1 text-3xl rounded-[50%] cursor-pointer hover:bg-[rgba(0, 0, 0, 0.2)]`}
   }
@@ -51,7 +51,7 @@ export const Banner = styled.figure`
 `;
 
 export const Button = styled.button`
-  ${tw`flex justify-center items-center w-[60%] text-lg bg-[#7199ba] rounded-[50px] py-1 px-2 hover:opacity-80`}
+  ${tw`flex justify-center items-center w-[60%] text-lg bg-darker rounded-[50px] py-1 px-2 hover:opacity-80`}
   & svg {
     ${tw`mr-1`}
   }

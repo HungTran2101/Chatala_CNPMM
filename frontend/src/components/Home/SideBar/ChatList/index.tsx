@@ -2,7 +2,11 @@ import ChatPreviewItem from '../ChatPreviewItem';
 import * as S from './ChatList.styled';
 import React from 'react';
 import { useGlobalContext } from '../../../../contexts/globalContext';
-import { ChatListArray, ChatMsgArray } from '../../../../utils/dataConfig';
+import {
+  ChatListArray,
+  ChatMsgArray,
+  UserAvatar,
+} from '../../../../utils/dataConfig';
 
 interface IChatList {
   selected: number;
@@ -14,6 +18,14 @@ const ChatList = ({ selected, setSelected }: IChatList) => {
 
   const roomSelect = (index: number) => {
     context.setRoomMsg(ChatMsgArray[index]);
+    context.setRoomInfo({
+      roomName: index % 2 === 0 ? '' : 'Group Chat',
+      isGroup: index % 2 === 0 ? false : true,
+      users: [
+        { avatar: UserAvatar, role: false, name: 'Ng Van A' },
+        { avatar: UserAvatar, role: true, name: 'Ng Van B' },
+      ],
+    });
   };
 
   return (
@@ -21,7 +33,7 @@ const ChatList = ({ selected, setSelected }: IChatList) => {
       {ChatListArray.map((data, index) => (
         <React.Fragment key={index}>
           <ChatPreviewItem
-            avatar={data.avatar}
+            avatar={UserAvatar}
             msg={data.msg}
             name={data.name}
             id={index}
