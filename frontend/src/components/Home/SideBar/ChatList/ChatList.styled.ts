@@ -13,6 +13,6 @@ export const Wrapper = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    ${tw`bg-light rounded-[50px]`}
+    ${tw`bg-dark rounded-[50px]`}
   }
-`
+`;

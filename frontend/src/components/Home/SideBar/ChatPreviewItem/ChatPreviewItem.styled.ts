@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import { VscHubot } from 'react-icons/vsc';
+import styled from "styled-components";
+import tw from "twin.macro";
+import { VscHubot } from "react-icons/vsc";
 
 export const ChatAvatar = styled.figure`
   ${tw`relative w-[50px] h-[50px] rounded-full overflow-hidden flex-shrink-0`}
@@ -29,7 +29,7 @@ export const Wrapper = styled.div`
 `;
 
 export const ChatPreviewItem = styled.div<{ active?: boolean; Id?: number }>`
-  ${tw`flex items-center relative hover:cursor-pointer hover:bg-light rounded-[20px]`}
-  ${({ active }) => active && tw`bg-lighter`}
-  ${({ Id }) => (Id !== -2 ? tw`my-1` : tw`bg-light`)}
+  ${tw`flex items-center relative hover:cursor-pointer hover:bg-dark rounded-[20px]`}
+  ${({ active }) => active && tw`bg-darker`}
+  ${({ Id }) => (Id !== -2 ? tw`my-1` : tw`bg-dark`)}
 `;

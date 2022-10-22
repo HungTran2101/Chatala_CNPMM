@@ -6,7 +6,7 @@ import { FiLogOut } from "react-icons/fi";
 import { IoNotificationsCircleSharp } from "react-icons/io5";
 
 export const Avatar = styled.figure`
-  ${tw`w-[60px] h-[60px] rounded-full overflow-hidden absolute shadow-md border-[4px] border-lighter`}
+  ${tw`w-[60px] h-[60px] rounded-full overflow-hidden absolute shadow-md border-[4px] border-darker`}
 `;
 
 export const Container = styled.div`
@@ -26,7 +26,7 @@ export const RightWrapper = styled.div`
 `;
 
 export const UserName = styled.div`
-  ${tw`self-stretch flex items-center max-w-6xl w-[350px] text-black flex-shrink-0 pl-24 pr-8 text-xl font-semibold py-2 rounded-[50px] bg-gradient-to-r from-secondary to-lighter`}
+  ${tw`self-stretch flex items-center max-w-6xl w-[350px] text-black flex-shrink-0 pl-24 pr-8 text-xl font-semibold py-2 rounded-[50px] bg-gradient-to-r from-secondary to-darker`}
 `;
 
 export const LogoContainer = styled.div`
@@ -49,7 +49,7 @@ export const SearchIcon = styled(BiSearchAlt)`
 `;
 
 export const Option = styled.div`
-  ${tw`text-[25px] text-lighter flex justify-between mr-5 items-center`}
+  ${tw`text-[25px] text-darker flex justify-between mr-5 items-center`}
 `;
 
 export const OptionSetting = styled(RiSettings3Fill)`
@@ -62,4 +62,4 @@ export const OptionLogOut = styled(FiLogOut)`
 
 export const OptionNotify = styled(IoNotificationsCircleSharp)`
   ${tw`hover:cursor-pointer mx-2 text-[30px]`}
-`
+`;

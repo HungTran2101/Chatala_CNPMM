@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import { FiMoreHorizontal } from 'react-icons/fi';
+import styled from "styled-components";
+import tw from "twin.macro";
+import { FiMoreHorizontal } from "react-icons/fi";
 
 export const ChatMsg = styled.div`
   ${tw`flex items-end my-5`}
@@ -17,8 +17,8 @@ export const ChatMsgText = styled.div`
 
 export const ChatMsgTextTail = styled.div`
   ${tw`absolute w-[30px] h-[30px] rounded-full`}
-  &:before{
-    ${tw`bg-light`}
+  &:before {
+    ${tw`bg-dark`}
   }
 `;
 
@@ -28,8 +28,8 @@ export const ChatMsgMoreIcon = styled(FiMoreHorizontal)`
 `;
 
 export const ChatMsgMoreIconWrapper = styled.div`
-${tw`relative`}
-`
+  ${tw`relative`}
+`;
 
 export const ChatMsgLeft = styled(ChatMsg)`
   ${tw`relative`}
@@ -58,10 +58,10 @@ export const ChatMsgRight = styled(ChatMsg)`
     ${tw`flex flex-row-reverse`}
   }
   ${ChatMsgText} {
-    ${tw`bg-lighter mr-2 rounded-br-[0] max-w-[75%]`}
+    ${tw`bg-darker mr-2 rounded-br-[0] max-w-[75%]`}
   }
   ${ChatMsgTextTail} {
-    ${tw`bg-lighter bottom-[-5px] right-[-8px]`}
+    ${tw`bg-darker bottom-[-5px] right-[-8px]`}
     &::before {
       ${tw`rounded-full absolute h-[50px] w-[50px] right-[-28px] bottom-[-3px]`}
       content: '';
