@@ -10,6 +10,8 @@ import { useGlobalContext } from '../../../contexts/globalContext';
 import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 import FilePreview from './FilePreview';
+import DropZone from 'react-dropzone';
+import { messageType } from '../../../utils/types';
 
 type FormValues = {
   msg: string;
@@ -37,6 +39,28 @@ const ChatArea = () => {
     setFieldValue('msg', chatInput.current?.innerText);
   };
 
+  //Message
+  const setMessagePosition = (data: messageType, index: number) => {
+    const roomMsg = context.roomMsg;
+
+    if (
+      data.senderId !== roomMsg[index + 1]?.senderId &&
+      data.senderId === roomMsg[index - 1]?.senderId
+    )
+      return 'top';
+    else if (
+      data.senderId === roomMsg[index - 1]?.senderId &&
+      data.senderId === roomMsg[index + 1]?.senderId
+    )
+      return 'middle';
+    else if (
+      data.senderId !== roomMsg[index - 1]?.senderId &&
+      data.senderId !== roomMsg[index + 1]?.senderId
+    )
+      return 'alone';
+    else return 'bottom';
+  };
+
   //Form
   const initialValues = {
     msg: '',
@@ -62,22 +86,38 @@ const ChatArea = () => {
       }
 
       setFieldValue('files', files);
+      e.currentTarget.value = '';
     }
+  };
+
+  const fileDropped = (
+    newFiles: File[],
+    values: FormValues,
+    setFieldValue: any
+  ) => {
+    const files = values.files;
+    for (let i = 0; i < newFiles.length; i++) {
+      files.push(newFiles[i]);
+    }
+
+    setFieldValue('files', files);
   };
 
   const onSubmit = (values: FormValues, { setFieldValue }: any) => {
     if (values.msg !== '' || values.files.length > 0) {
+      console.log(values);
       setToggleEmoji(false);
-      context.setRoomMsg([
-        {
-          ...context.roomMsg[0],
-          senderId: '',
-          msg: values.msg,
-          files: values.files,
-          unSend: false,
-        },
-        ...context.roomMsg,
-      ]);
+      if (values.msg !== '') {
+        context.setRoomMsg([
+          {
+            ...context.roomMsg[0],
+            senderId: '1',
+            msg: values.msg,
+            unSend: false,
+          },
+          ...context.roomMsg,
+        ]);
+      }
       chatInput.current!.innerText = '';
 
       setFieldValue('msg', '');
@@ -113,81 +153,107 @@ const ChatArea = () => {
           setToggleOption={setToggleOption}
         />
       )}
-      <S.ChatAreaMain>
-        <S.ChatAreaMainMsg>
-          <S.ChatAreaMainMsgInner>
-            {context.roomMsg?.map((data, index) => (
-              <ChatMsg msg={data.msg} index={index} key={index} />
-            ))}
-          </S.ChatAreaMainMsgInner>
-        </S.ChatAreaMainMsg>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}
-        >
-          {({ values, setFieldValue }) => (
-            <Form>
-              {values.files.length > 0 && (
-                <S.ChatChatAreaFilePreview>
-                  <S.ChatChatAreaFilePreviewInner>
-                    {values.files.map((data, index) => (
-                      <FilePreview
-                        files={values.files}
-                        setFieldValue={setFieldValue}
-                        index={index}
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ values, setFieldValue, submitForm }) => (
+          <DropZone
+            onDrop={(acceptedFiles) =>
+              fileDropped(acceptedFiles, values, setFieldValue)
+            }
+            noClick
+            noKeyboard
+          >
+            {({ getRootProps, getInputProps, isDragActive }) => (
+              <S.ChatAreaMain {...getRootProps()}>
+                <S.ChatAreaMainMsg>
+                  <S.ChatAreaMainMsgInner>
+                    {context.roomMsg?.map((data, index) => (
+                      <ChatMsg
+                        data={data}
+                        position={setMessagePosition(data, index)}
                         key={index}
                       />
                     ))}
-                  </S.ChatChatAreaFilePreviewInner>
-                </S.ChatChatAreaFilePreview>
-              )}
-              <S.ChatAreaMainInput>
-                {toggleEmoji && (
-                  <S.ChatAreaMainInputEmojiPicker ref={emojiRef}>
-                    <EmojiPicker
-                      skinTonesDisabled={true}
-                      emojiStyle={EmojiStyle.TWITTER}
-                      height={400}
-                      width={400}
-                      onEmojiClick={(emoData) =>
-                        emojiClicked(emoData, setFieldValue)
-                      }
-                    />
-                  </S.ChatAreaMainInputEmojiPicker>
+                  </S.ChatAreaMainMsgInner>
+                </S.ChatAreaMainMsg>
+                {values.files.length > 0 && (
+                  <S.ChatChatAreaFilePreview>
+                    <S.ChatChatAreaFilePreviewInner>
+                      {values.files.map((data, index) => (
+                        <FilePreview
+                          files={values.files}
+                          setFieldValue={setFieldValue}
+                          index={index}
+                          key={index}
+                        />
+                      ))}
+                    </S.ChatChatAreaFilePreviewInner>
+                  </S.ChatChatAreaFilePreview>
                 )}
-                <S.ChatAreaMainInputFile htmlFor='fileInput'>
-                  +
-                </S.ChatAreaMainInputFile>
-                <input
-                  type='file'
-                  id='fileInput'
-                  hidden
-                  multiple
-                  onChange={(e) => fileChoosen(e, values, setFieldValue)}
-                  // onClick={(e) => e.target. = null}
-                />
-                <S.ChatAreaMainInputMsg>
-                  <S.ChatAreaMainInputEmoji
-                    onClick={() => setToggleEmoji(true)}
+                <Form>
+                  <S.ChatAreaMainInput>
+                    {toggleEmoji && (
+                      <S.ChatAreaMainInputEmojiPicker ref={emojiRef}>
+                        <EmojiPicker
+                          skinTonesDisabled={true}
+                          emojiStyle={EmojiStyle.TWITTER}
+                          height={400}
+                          width={400}
+                          onEmojiClick={(emoData) =>
+                            emojiClicked(emoData, setFieldValue)
+                          }
+                        />
+                      </S.ChatAreaMainInputEmojiPicker>
+                    )}
+                    <S.ChatAreaMainInputFile htmlFor='fileInput'>
+                      +
+                    </S.ChatAreaMainInputFile>
+                    <S.ChatAreaMainInputMsg>
+                      <S.ChatAreaMainInputEmoji
+                        onClick={() => setToggleEmoji(true)}
+                      />
+                      <S.ChatAreaMainInputText
+                        username={UserName}
+                        contentEditable
+                        ref={chatInput}
+                        onInput={(e) =>
+                          setFieldValue('msg', e.currentTarget.innerText)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.code === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            submitForm();
+                          }
+                        }}
+                      />
+                      <S.ChatAreaMainInputButtonSend type='submit'>
+                        <S.ChatAreaMainInputSendIcon />
+                      </S.ChatAreaMainInputButtonSend>
+                    </S.ChatAreaMainInputMsg>
+                  </S.ChatAreaMainInput>
+                  <input
+                    {...getInputProps({
+                      type: 'file',
+                      id: 'fileInput',
+                      hidden: true,
+                      multiple: true,
+                      onChange: (e) => fileChoosen(e, values, setFieldValue),
+                    })}
                   />
-                  <S.ChatAreaMainInputText
-                    username={UserName}
-                    contentEditable
-                    ref={chatInput}
-                    onInput={(e) =>
-                      setFieldValue('msg', e.currentTarget.innerText)
-                    }
-                  />
-                  <S.ChatAreaMainInputButtonSend type='submit'>
-                    <S.ChatAreaMainInputSendIcon />
-                  </S.ChatAreaMainInputButtonSend>
-                </S.ChatAreaMainInputMsg>
-              </S.ChatAreaMainInput>
-            </Form>
-          )}
-        </Formik>
-      </S.ChatAreaMain>
+                  {isDragActive && (
+                    <S.ChatAreaMainDropZone>
+                      Drop files here
+                    </S.ChatAreaMainDropZone>
+                  )}
+                </Form>
+              </S.ChatAreaMain>
+            )}
+          </DropZone>
+        )}
+      </Formik>
     </S.ChatArea>
   );
 };

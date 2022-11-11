@@ -4,6 +4,15 @@ import Link from "next/link";
 import * as S from "./OTPForm.styled";
 import { withRouter, useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useGlobalContext } from "../../contexts/globalContext";
+import { UsersApi } from "../../services/api/users";
+import { API_URL } from "../../services/api/urls";
+
+type User = {
+  name: string;
+  phone: string;
+  password: string;
+};
 
 const OTPCode = (props: any) => {
   const router = useRouter();
@@ -15,12 +24,21 @@ const OTPCode = (props: any) => {
     otpCode: "",
   };
 
+  const context = useGlobalContext();
+
   const handleSubmit = (values: any, { setSubmitting }: any) => {
     window.confirmationResult
       .confirm(values.otpCode)
       .then(() => {
-        console.log(values.otpCode);
         setCheckError("false");
+
+        const data: User  = {
+          name: context.registerInfo.name,
+          phone: context.registerInfo.phoneNumber,
+          password: context.registerInfo.password
+        }
+                
+        UsersApi.create(data);
       })
       .catch(() => {
         setCheckError("true");

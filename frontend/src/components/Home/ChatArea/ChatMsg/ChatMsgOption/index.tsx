@@ -15,6 +15,7 @@ const ChatMsgOption = ({ setToggleOption }: IChatMsgOption) => {
   return (
     <S.ChatMsgOption ref={chatMsgOptionRef}>
       <S.NormalItem>Unsend</S.NormalItem>
+      <S.DeteleItem>Delete</S.DeteleItem>
     </S.ChatMsgOption>
   );
 };

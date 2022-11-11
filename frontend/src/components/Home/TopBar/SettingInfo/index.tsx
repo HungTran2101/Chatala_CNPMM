@@ -75,9 +75,6 @@ const SettingInfo = ({
       <S.ModalBody>
         <Formik
           initialValues={initialValues}
-          onSubmit={(data) => {
-            console.log("submits: ", data);
-          }}
           onSubmit={onSubmit}
         >
           {({ setFieldValue, values, errors, touched }) => (

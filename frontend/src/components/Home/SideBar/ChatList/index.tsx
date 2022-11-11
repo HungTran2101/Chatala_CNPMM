@@ -29,21 +29,23 @@ const ChatList = ({ selected, setSelected }: IChatList) => {
   };
 
   return (
-    <S.Wrapper>
-      {ChatListArray.map((data, index) => (
-        <React.Fragment key={index}>
-          <ChatPreviewItem
-            avatar={UserAvatar}
-            msg={data.msg}
-            name={data.name}
-            id={index}
-            active={selected === index}
-            setSelected={setSelected}
-            onClick={() => roomSelect(index)}
-          />
-        </React.Fragment>
-      ))}
-    </S.Wrapper>
+    <S.ChatList>
+      <S.Wrapper>
+        {ChatListArray.map((data, index) => (
+          <React.Fragment key={index}>
+            <ChatPreviewItem
+              avatar={UserAvatar}
+              msg={data.msg}
+              name={data.name}
+              id={index}
+              active={selected === index}
+              setSelected={setSelected}
+              onClick={() => roomSelect(index)}
+            />
+          </React.Fragment>
+        ))}
+      </S.Wrapper>
+    </S.ChatList>
   );
 };
 

@@ -9,7 +9,7 @@ const nextConfig = {
     return config
   },
   images: {
-    domains: ['icon-library.com', 'localhost'],
+    domains: ['icon-library.com', 'localhost', 'res.cloudinary.com'],
   },
 }
 

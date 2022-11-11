@@ -6,7 +6,7 @@ import { BsEmojiLaughingFill } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { zoomIn } from "react-animations";
 export const ChatArea = styled.div`
-  ${tw`relative bg-secondary shadow-md rounded-[30px] flex-grow flex flex-col`}
+  ${tw`relative bg-secondary shadow-md rounded-[30px] flex-grow flex flex-col overflow-hidden`}
 `;
 
 export const ChatAreaHead = styled.div`
@@ -19,7 +19,7 @@ export const ChatAreaHeadInfo = styled.div`
 
 export const ChatAreaHeadAvatar = styled.figure`
   ${tw`relative w-[50px] h-[50px] rounded-full overflow-hidden flex-shrink-0`}
-  border: 2px solid black;
+  border: 1px solid gray;
 `;
 
 export const ChatAreaHeadNameWrapper = styled.div`
@@ -44,11 +44,11 @@ export const ChatAreaHeadOption = styled(IoMenu)`
 `;
 
 export const ChatAreaMain = styled.div`
-  ${tw`flex flex-col flex-grow bg-dark px-6 pb-4 pt-0 rounded-[30px]`}
+  ${tw`flex flex-col flex-grow bg-dark px-6 pb-4 pt-0 rounded-[30px] shadow-inner`}
 `;
 
 export const ChatAreaMainMsg = styled.div`
-  ${tw`flex-grow overflow-y-scroll overflow-x-hidden h-0 mb-3 rounded-3xl pr-1.5 flex flex-col-reverse`}
+  ${tw`flex-grow overflow-y-scroll overflow-x-hidden h-0 mb-3 pt-5 rounded-3xl pr-1.5 flex flex-col-reverse`}
 
   &::-webkit-scrollbar-track {
     ${tw`rounded-[10px] bg-transparent`}
@@ -141,4 +141,8 @@ export const ChatAreaMainInputButtonSend = styled.button`
 
 export const ChatAreaMainInputSendIcon = styled(RiSendPlaneFill)`
   ${tw`text-[20px]`}
+`;
+
+export const ChatAreaMainDropZone = styled.div`
+  ${tw`absolute flex items-center justify-center text-gray-200 text-2xl tracking-wide font-medium h-full w-full bg-[#00000099] left-0 top-0 z-10`}
 `;

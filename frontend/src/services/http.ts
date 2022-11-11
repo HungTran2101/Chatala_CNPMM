@@ -1,6 +1,7 @@
 import Axios, { AxiosResponse } from 'axios'
 
 const http = Axios.create({
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

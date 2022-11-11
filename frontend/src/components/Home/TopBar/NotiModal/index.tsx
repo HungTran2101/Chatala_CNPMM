@@ -1,8 +1,8 @@
-import * as S from "./NotiModal.styled";
-import * as React from "react";
-import { NotiListArray } from "../../../../utils/dataConfig";
-import Image from "next/image";
-import { useOutsideClick } from "../../../Global/ProcessFunctions";
+import * as S from './NotiModal.styled';
+import * as React from 'react';
+import { NotiListArray } from '../../../../utils/dataConfig';
+import Image from 'next/image';
+import { useOutsideClick } from '../../../Global/ProcessFunctions';
 
 interface INotiModal {
   setActiveNotiModal: (isActive: boolean) => void;
@@ -22,7 +22,7 @@ const NotiModal = ({ setActiveNotiModal }: INotiModal) => {
         <S.NotiItem key={index}>
           <S.NotiInfo>
             <S.NotiAvatar>
-              <Image src={data.avatar} alt="avatar" layout='fill'/>
+              <Image src={data.avatar} alt='avatar' layout='fill' />
             </S.NotiAvatar>
             <S.NotiNameWrapper>
               <S.NotiName>{data.name}</S.NotiName>

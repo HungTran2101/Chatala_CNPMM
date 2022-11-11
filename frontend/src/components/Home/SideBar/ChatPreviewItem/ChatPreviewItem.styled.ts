@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import tw from "twin.macro";
-import { VscHubot } from "react-icons/vsc";
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { VscHubot } from 'react-icons/vsc';
 
 export const ChatAvatar = styled.figure`
   ${tw`relative w-[50px] h-[50px] rounded-full overflow-hidden flex-shrink-0`}
-  border: 2px solid black;
+  border: 1px solid gray;
 `;
 
 export const ChatBotAvatar = styled(VscHubot)`

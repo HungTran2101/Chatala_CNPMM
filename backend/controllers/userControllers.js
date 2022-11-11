@@ -13,10 +13,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
   });
 
   res.status(200).json({
-    avatar: newUser.avatar,
-    banner: newUser.banner,
-    name: newUser.name,
-    jwt: generateJWT(newUser._id),
+    message: "Register Successfully!",
   });
 });
 
@@ -27,11 +24,15 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
   if (user) {
     if (await user.matchPassword(password)) {
+      res.cookie("token", generateJWT(user._id), {
+        signed: true,
+        httpOnly: true,
+        // secure: true,
+      });
       res.status(200).json({
         avatar: user.avatar,
         banner: user.banner,
         name: user.name,
-        jwt: generateJWT(user._id),
       });
     } else {
       return next(
@@ -45,4 +46,27 @@ const loginUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { registerUser, loginUser };
+const findUser = asyncHandler(async (req, res, next) => {
+  const { search } = req.body;
+
+  const users = await Users.find({
+    $or: [
+      {
+        phone: {
+          $regex: search,
+        },
+      },
+      {
+        name: {
+          $regex: search,
+        },
+      },
+    ],
+  }).limit(10);
+
+  res.status(200).json({
+    users,
+  });
+});
+
+module.exports = { registerUser, loginUser, findUser };

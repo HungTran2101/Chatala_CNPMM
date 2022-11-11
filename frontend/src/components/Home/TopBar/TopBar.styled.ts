@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import tw from "twin.macro";
-import { BiSearchAlt } from "react-icons/bi";
-import { RiSettings3Fill } from "react-icons/ri";
-import { FiLogOut } from "react-icons/fi";
-import { IoNotificationsCircleSharp } from "react-icons/io5";
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { BiSearchAlt } from 'react-icons/bi';
+import { RiSettings3Fill } from 'react-icons/ri';
+import { FiLogOut } from 'react-icons/fi';
+import { IoNotificationsCircleSharp } from 'react-icons/io5';
 
 export const Avatar = styled.figure`
-  ${tw`w-[60px] h-[60px] rounded-full overflow-hidden absolute shadow-md border-[4px] border-darker`}
+  ${tw`w-[60px] h-[60px] rounded-full overflow-hidden absolute shadow-md border-[2px] border-darker`}
 `;
 
 export const Container = styled.div`
@@ -14,7 +14,7 @@ export const Container = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  ${tw`bg-secondary w-full rounded-[50px] flex shadow-sm`}
+  ${tw`bg-secondary w-full rounded-[50px] flex shadow-md`}
 `;
 
 export const LeftWrapper = styled.div`

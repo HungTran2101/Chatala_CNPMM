@@ -30,6 +30,9 @@ const MoreOptions = ({ setToggleOption, roomInfo }: IMoreOptions) => {
         </S.RoomInfoName>
       </S.RoomInfo>
       <S.NormalItem>Friend's profile</S.NormalItem>
+      {!roomInfo.isGroup && <S.NormalItem>Change Nickname</S.NormalItem>}
+      {roomInfo.isGroup && <S.NormalItem>Group Members</S.NormalItem>}
+      <S.DeteleItem>Block</S.DeteleItem>
       <S.DeteleItem>Delete this chat</S.DeteleItem>
     </S.MoreOptions>
   );

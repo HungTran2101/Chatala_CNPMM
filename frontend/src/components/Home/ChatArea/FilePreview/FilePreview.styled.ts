@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import tw from "twin.macro";
-import { MdCancel } from "react-icons/md";
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { MdCancel } from 'react-icons/md';
 
 export const FilePreview = styled.div`
   ${tw`relative flex items-center mx-2 h-[50px] pl-1.5 pr-3.5 py-1 bg-primary rounded-[10px] shadow-md`}

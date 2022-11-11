@@ -4,4 +4,8 @@ const generateJWT = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {});
 };
 
-module.exports = { generateJWT };
+const decodeJWT = (token) => {
+  return jwt.verify(token, process.env.JWT_SECRET);
+}
+
+module.exports = { generateJWT, decodeJWT };
