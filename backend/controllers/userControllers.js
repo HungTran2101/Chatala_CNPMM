@@ -1,26 +1,36 @@
 const asyncHandler = require("express-async-handler");
 const Users = require("../models/userModel");
-const { generateJWT } = require("../utils/utilFunctions");
+const { generateJWT, randomNumber } = require("../utils/utilFunctions");
 const ErrorHandler = require("../utils/errorHandler");
+const { sendEmail, send } = require("../utils/mailer");
+const crypto = require('crypto');
 
 const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, password, phone } = req.body;
+  const { name, password, email } = req.body;
+
+  const otp = randomNumber(100000, 999999);
 
   const newUser = await Users.create({
     name,
-    phone,
+    email,
     password,
+    otp,
+  });
+
+  sendEmail(email, "Verify your account", "Veriry code: " + otp).catch(() => {
+    Users.deleteOne({ _id: newUser._id });
   });
 
   res.status(200).json({
-    message: "Register Successfully!",
+    message: "Register Successfully! Check your email to verify your account",
   });
+  
 });
 
 const loginUser = asyncHandler(async (req, res, next) => {
-  const { phone, password } = req.body;
+  const { email, password } = req.body;
 
-  const user = await Users.findOne({ phone });
+  const user = await Users.findOne({ email });
 
   if (user) {
     if (await user.matchPassword(password)) {
@@ -36,12 +46,12 @@ const loginUser = asyncHandler(async (req, res, next) => {
       });
     } else {
       return next(
-        new ErrorHandler("Phone Number not found or Incorrect Password", 404)
+        new ErrorHandler("Email not found or Incorrect Password", 404)
       );
     }
   } else {
     return next(
-      new ErrorHandler("Phone Number not found or Incorrect Password", 404)
+      new ErrorHandler("Email not found or Incorrect Password", 404)
     );
   }
 });
@@ -52,7 +62,7 @@ const findUser = asyncHandler(async (req, res, next) => {
   const users = await Users.find({
     $or: [
       {
-        phone: {
+        email: {
           $regex: search,
         },
       },
@@ -69,4 +79,24 @@ const findUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { registerUser, loginUser, findUser };
+const forgotPassword = asyncHandler(async (req, res, next) => {
+ 
+});
+
+const verifyAccount = asyncHandler(async (req, res, next) => {
+  const { otp, email } = req.body;
+
+  const user = await Users.findOne({ email });
+  if(user === null) return next(new ErrorHandler("Email not found", 404));
+
+  if(user.otp === otp) {
+    await Users.updateOne({ _id: user._id }, { active: true });
+    res.status(200).json({
+      message: "Verify Successfully! You can login now",
+    })
+  }else {
+    return next(new ErrorHandler("Verify code is incorrect", 404));
+  }
+});
+
+module.exports = { registerUser, loginUser, findUser, forgotPassword, verifyAccount };

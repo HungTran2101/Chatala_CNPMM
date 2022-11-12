@@ -8,4 +8,8 @@ const decodeJWT = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
 }
 
-module.exports = { generateJWT, decodeJWT };
+const randomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+module.exports = { generateJWT, decodeJWT, randomNumber };
