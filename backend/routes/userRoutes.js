@@ -13,7 +13,7 @@ const {
 const router = express.Router();
 
 router.route("/register").post(registerUser);
-router.route("/register/verify-account").post(verifyAccount, findUser);
+router.route("/register/verify-account").post(verifyAccount);
 router.route("/login").post(loginUser);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/forgot-password/verify-token").post(verifyToken);

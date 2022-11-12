@@ -14,8 +14,6 @@ const prefixResetPasswordToken = 'resetPwToken-';
 const registerUser = asyncHandler(async (req, res, next) => {
 	const { name, password, email } = req.body;
 
-	console.log(name, password, email);
-
 	const verifiedtoken = randomNumber(100000, 999999);
 
 	const newUser = await Users.create({
@@ -25,14 +23,12 @@ const registerUser = asyncHandler(async (req, res, next) => {
 		verifiedtoken
 	});
 
-	console.log('every thing is ok?');
-
 	if (constants.NODE_ENV !== 'DEVELOPMENT') {
 		sendEmail(email, 'Verify your account', 'Verified Token: ' + verifiedtoken).catch(() => {
 			Users.deleteOne({ _id: newUser._id });
 		});
 	}
-	
+
 	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
 
 	const encryptedUID = encrypter.encrypt(prefixRegister + newUser._id.toString());
@@ -54,8 +50,6 @@ const verifyAccount = asyncHandler(async (req, res, next) => {
 	const userId = getUserIdFromToken(UID, prefixRegister);
 	const user = await Users.findOne({ _id: userId });
 	if (user === null) return next(new ErrorHandler('Verify session error', 404));
-
-	console.log(user.verifiedtoken, verifiedtoken);
 
 	if (user.verifiedtoken == verifiedtoken) {
 		await Users.updateOne({ _id: user._id }, { active: true });
@@ -125,7 +119,11 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 	const verifiedtoken = randomNumber(100000, 999999);
 	await Users.updateOne({ _id: user._id, verifiedtoken: verifiedtoken });
 
-	sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
+	if (constants.NODE_ENV !== 'DEVELOPMENT') {
+		sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
+	}
+
+	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
 
 	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()));
 	res.status(200).json({
