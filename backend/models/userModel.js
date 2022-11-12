@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
       trim: true,
       unique: [true, "Email existed"],
     },
-    otp: {
+    verifiedtoken: {
       type: Number,
     },
     active: {
