@@ -20,9 +20,11 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "express-async-handler": "^1.2.0",
+    "http": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.4",
     "nodemailer": "^6.8.0",
+    "stomp-broker-js": "^1.3.0",
     "validator": "^13.7.0"
   },
   "devDependencies": {
