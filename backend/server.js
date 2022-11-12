@@ -21,7 +21,7 @@ const app = express();
 app.use(express.json()); //allow accept json data
 
 app.get('/', (req, res) => {
-  res.send('server is ready!');
+  res.send('app is ready!');
 });
 
 //route
