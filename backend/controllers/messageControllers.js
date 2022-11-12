@@ -1,8 +1,9 @@
-const asyncHandler = require("express-async-handler");
-const Messages = require("../models/messageModel");
-const Rooms = require("../models/roomModel");
-const { decodeJWT } = require("../utils/utilFunctions");
+const asyncHandler = require('express-async-handler');
+const Messages = require('../models/messageModel');
+const Rooms = require('../models/roomModel');
+const { decodeJWT } = require('../utils/utilFunctions');
 
+// save message
 const sendMessage = asyncHandler(async (req, res, next) => {
   const { roomId, msg, files } = req.body;
   const { id } = decodeJWT(req.signedCookies.token);
@@ -14,13 +15,13 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     files,
   });
   if (result) {
-    const lastMsg = msg !== "" ? msg : files[0].name;
+    const lastMsg = msg !== '' ? msg : files[0].name;
     await Rooms.findByIdAndUpdate(roomId, { lastMsg }, { new: true });
   }
 
   res.status(200).json({
     result,
-    message: "Send Message Successfully!",
+    message: 'Send Message Successfully!',
   });
 });
 
@@ -35,7 +36,7 @@ const unSendMessage = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     result,
-    message: "unSend Message Successfully!",
+    message: 'unSend Message Successfully!',
   });
 });
 
@@ -50,7 +51,7 @@ const deleteMessage = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     result,
-    message: "Delete Message Successfully!",
+    message: 'Delete Message Successfully!',
   });
 });
 
