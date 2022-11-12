@@ -21,11 +21,18 @@ const userSchema = mongoose.Schema(
       required: [true, "Password is missing"],
       select: false,
     },
-    phone: {
+    email: {
       type: String,
-      required: [true, "Password is missing"],
+      required: [true, "Email is missing"],
       trim: true,
-      unique: [true, "Phone number existed"],
+      unique: [true, "Email existed"],
+    },
+    otp: {
+      type: Number,
+    },
+    active: {
+      type: Boolean,
+      default: false,
     },
     gender: { type: String, default: "male" },
     dob: { type: Date, default: new Date() },
