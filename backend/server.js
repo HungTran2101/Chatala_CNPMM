@@ -9,6 +9,7 @@ const friendRoutes = require("./routes/friendRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const utilRoutes = require("./routes/utilRoutes")
 const errorMiddleware = require("./middlewares/errors");
+const createEncrypter = require("./utils/encrypter");
 
 const PORT = process.env.PORT || 5000;
 
