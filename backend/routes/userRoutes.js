@@ -7,7 +7,9 @@ const {
   verifyAccount,
   forgotPassword,
   verifyToken,
-  resetPassword
+  resetPassword,
+  updateProfile,
+  getUserProfile
 } = require("../controllers/userControllers");
 
 const router = express.Router();
@@ -19,5 +21,8 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/forgot-password/verify-token").post(verifyToken);
 router.route("/forgot-password/reset-password").post(resetPassword);
 router.route("/find").post(authMiddleware, findUser);
+router.route("/update-profile").post(authMiddleware, updateProfile);
+router.route("/profile").get(authMiddleware, getUserProfile);
+router.route("/:userId/profile").get(getUserProfile);
 
 module.exports = router;

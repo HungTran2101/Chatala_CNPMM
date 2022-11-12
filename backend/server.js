@@ -51,8 +51,6 @@ app.use(errorMiddleware); //handle error
 const server = http.createServer(app);
 NotificationService.startNotificationServive(server);
 
-console.log(bcrypt.hashSync("321"))
-
 //connect DB
 connectDB().then(() =>
   server.listen(
