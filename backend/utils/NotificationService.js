@@ -1,4 +1,7 @@
 const StompServer = require('stomp-broker-js');
+const Messages = require('../models/messageModel');
+const Rooms = require('../models/roomModel');
+const { decodeJWT } = require('../utils/utilFunctions');
 
 const startNotificationServive = server => {
   const stompServer = new StompServer({
@@ -11,18 +14,27 @@ const startNotificationServive = server => {
 
   stompServer.subscribe('/server', (data, headers) => {
     data = JSON.parse(data);
-    // console.log(data);
+    console.log(data);
 
-    // check if this is new box by roomId
-    if (data.roomId === '' || data.roomId === 'tempRoomId') {
-      // new private room
-    } else {
-      if (data.receiverName === '') {
-        // group message
-      } else {
-        // private message
+    const { roomId, msg, files } = req.body;
+    const { id } = decodeJWT(req.signedCookies.token);
+
+    const result = Messages.create({
+      roomId,
+      senderId: id,
+      msg,
+      files,
+    }).then(res => {
+      if (result) {
+        const lastMsg = msg !== '' ? msg : files[0].name;
+        Rooms.findByIdAndUpdate(roomId, { lastMsg }, { new: true }).then(() => {
+          Rooms.findOne(roomId).then(room => {
+            console.log(room);
+            // sendToClients(stompServer,room);
+          });
+        });
       }
-    }
+    });
   });
 
   stompServer.onDisconnect(result => {
