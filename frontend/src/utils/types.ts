@@ -23,6 +23,6 @@ export type roomType = {
 
 export type registerType = {
   name: string;
-  phoneNumber: string;
+  email: string;
   password: string;
 };

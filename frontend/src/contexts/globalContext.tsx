@@ -15,7 +15,7 @@ export const GlobalContext = createContext<GlobalContent>({
   setRoomMsg: () => {},
   roomInfo: { roomName: '', isGroup: false, users: [] },
   setRoomInfo: () => {},
-  registerInfo: { name: '', phoneNumber: '', password: '' },
+  registerInfo: { name: '', email: '', password: '' },
   setRegisterInfo: () => {},
 });
 
@@ -30,7 +30,7 @@ export const GlobalProvider = ({ children }: any) => {
   });
   const [registerInfo, setRegisterInfo] = useState<registerType>({
     name: '',
-    phoneNumber: '',
+    email: '',
     password: '',
   });
 
