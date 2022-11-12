@@ -17,7 +17,7 @@ export const InputGroup = styled.div<{ error: boolean }>`
 `;
 
 export const ShortInputDiv = styled.div`
-  ${tw`w-[80%] h-full`}
+  ${tw`w-full h-full`}
 `;
 
 export const ShortInput = styled(Field)<{ error: boolean }>`

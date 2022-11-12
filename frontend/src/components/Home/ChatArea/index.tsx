@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import * as S from './ChatArea.styled';
 import { UserAvatar, UserName } from '../../../utils/dataConfig';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import ChatMsg from './ChatMsg';
 import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
 import MoreOptions from './MoreOptions';
@@ -12,6 +12,8 @@ import { Form, Formik } from 'formik';
 import FilePreview from './FilePreview';
 import DropZone from 'react-dropzone';
 import { messageType } from '../../../utils/types';
+import SockJS from 'sockjs-client';
+const Stomp = require('stompjs');
 
 type FormValues = {
   msg: string;
@@ -107,23 +109,58 @@ const ChatArea = () => {
     if (values.msg !== '' || values.files.length > 0) {
       console.log(values);
       setToggleEmoji(false);
-      if (values.msg !== '') {
-        context.setRoomMsg([
-          {
-            ...context.roomMsg[0],
-            senderId: '1',
-            msg: values.msg,
-            unSend: false,
-          },
-          ...context.roomMsg,
-        ]);
-      }
+      // if (values.msg !== '') {
+      //   context.setRoomMsg([
+      //     {
+      //       ...context.roomMsg[0],
+      //       senderId: '1',
+      //       msg: values.msg,
+      //       unSend: false,
+      //     },
+      //     ...context.roomMsg,
+      //   ]);
+      // }
       chatInput.current!.innerText = '';
+
+      send(values.msg);
 
       setFieldValue('msg', '');
       setFieldValue('files', []);
     }
   };
+
+  const [sendService, setSendService] = useState<any>();
+
+  const connectServer = () => {
+    let Sock = new SockJS('http://localhost:5000/' + 'ws');
+    let stompClient = Stomp.over(Sock);
+    stompClient.debug = null;
+    stompClient.heartbeat = 0;
+    stompClient.connect(
+      {},
+      () => {
+        stompClient.subscribe('/user/' + 'userId', (message: any) =>
+          onPrivateMessage(message)
+        );
+        setSendService(stompClient);
+      },
+      () => {
+        alert('disconnected from server');
+      }
+    );
+  };
+
+  const onPrivateMessage = (message: any) => {
+    console.log(message);
+  };
+
+  const send = (readyMessage: any) => {
+    sendService.send('/server', {}, JSON.stringify(readyMessage));
+  };
+
+  useEffect(() => {
+    connectServer();
+  }, []);
 
   return (
     <S.ChatArea>
@@ -160,7 +197,7 @@ const ChatArea = () => {
       >
         {({ values, setFieldValue, submitForm }) => (
           <DropZone
-            onDrop={(acceptedFiles) =>
+            onDrop={(acceptedFiles: any) =>
               fileDropped(acceptedFiles, values, setFieldValue)
             }
             noClick
@@ -202,7 +239,7 @@ const ChatArea = () => {
                           emojiStyle={EmojiStyle.TWITTER}
                           height={400}
                           width={400}
-                          onEmojiClick={(emoData) =>
+                          onEmojiClick={emoData =>
                             emojiClicked(emoData, setFieldValue)
                           }
                         />
@@ -219,10 +256,10 @@ const ChatArea = () => {
                         username={UserName}
                         contentEditable
                         ref={chatInput}
-                        onInput={(e) =>
+                        onInput={e =>
                           setFieldValue('msg', e.currentTarget.innerText)
                         }
-                        onKeyDown={(e) => {
+                        onKeyDown={e => {
                           if (e.code === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
                             submitForm();
@@ -240,7 +277,8 @@ const ChatArea = () => {
                       id: 'fileInput',
                       hidden: true,
                       multiple: true,
-                      onChange: (e) => fileChoosen(e, values, setFieldValue),
+                      onChange: (e: any) =>
+                        fileChoosen(e, values, setFieldValue),
                     })}
                   />
                   {isDragActive && (
