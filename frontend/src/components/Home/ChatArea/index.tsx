@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import * as S from './ChatArea.styled';
 import { UserAvatar, UserName } from '../../../utils/dataConfig';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import ChatMsg from './ChatMsg';
 import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
 import MoreOptions from './MoreOptions';
@@ -10,6 +10,8 @@ import { useGlobalContext } from '../../../contexts/globalContext';
 import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 import FilePreview from './FilePreview';
+import SockJS from 'sockjs-client';
+const Stomp = require('stompjs');
 
 type FormValues = {
   msg: string;
@@ -82,6 +84,40 @@ const ChatArea = () => {
     }
   };
 
+  useEffect(() => {
+    SubcribeServer();
+  }, []);
+
+  const send = () => {
+    sendService?.send('/server', {}, JSON.stringify('message'));
+  };
+
+  const SubcribeServer = () => {
+    let Sock = new SockJS('ServerLink' + 'ws');
+    let stompClient = Stomp.over(Sock);
+    stompClient.debug = null;
+    stompClient.heartbeat = 0;
+    stompClient.connect(
+      {},
+      () => {
+        stompClient.subscribe('/user/' + 'userID', (message: any) =>
+          onPrivateMessage(message)
+        );
+        setSendService(stompClient);
+      },
+      () => {
+        alert('disconnected from server');
+      }
+    );
+  };
+
+  const [sendService, setSendService] = useState<any>();
+
+  const onPrivateMessage = (message: any) => {
+    message = JSON.parse(message.body);
+    console.log(message);
+  };
+
   return (
     <S.ChatArea>
       <S.ChatAreaHead>
@@ -142,7 +178,7 @@ const ChatArea = () => {
                       emojiStyle={EmojiStyle.TWITTER}
                       height={400}
                       width={400}
-                      onEmojiClick={(emoData) =>
+                      onEmojiClick={emoData =>
                         emojiClicked(emoData, setFieldValue)
                       }
                     />
@@ -156,7 +192,7 @@ const ChatArea = () => {
                   id='fileInput'
                   hidden
                   multiple
-                  onChange={(e) => fileChoosen(e, values, setFieldValue)}
+                  onChange={e => fileChoosen(e, values, setFieldValue)}
                   // onClick={(e) => e.target. = null}
                 />
                 <S.ChatAreaMainInputMsg>
@@ -167,7 +203,7 @@ const ChatArea = () => {
                     username={UserName}
                     contentEditable
                     ref={chatInput}
-                    onInput={(e) =>
+                    onInput={e =>
                       setFieldValue('msg', e.currentTarget.innerText)
                     }
                   />
