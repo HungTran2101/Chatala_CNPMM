@@ -4,7 +4,7 @@ const ErrorHandler = require("../utils/errorHandler");
 
 module.exports = async (req, res, next) => {
 
-    const { token } = req.signedCookies;
+    const { token, UID } = req.signedCookies;
 
     if(!token) {
         return next(new ErrorHandler("Unauthorization!", 401));
@@ -13,6 +13,7 @@ module.exports = async (req, res, next) => {
     const isDecoded = decodeJWT(token);
 
     req.user = await Users.findById(isDecoded.id);
+    req.uid = UID;
 
     next();
 }

@@ -25,17 +25,6 @@ const getUserIdFromUIDCookie = (token, prefix, next) => {
 	}
 };
 
-const getUserIdFromToken = (token, next) => {
-	try{
-		const userId = decodeJWT(token).id;
-		if (!userId) throw new Error();
-
-		return userId;
-	}catch(err){
-		return next(new ErrorHandler('Token is invalid', 404));
-	}
-};
-
 const registerUser = asyncHandler(async (req, res, next) => {
 	const { name, password, email } = req.body;
 
@@ -71,12 +60,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 const verifyAccount = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
 
-	const { UID } = req.signedCookies;
-	if (!UID) {
-		throw new ErrorHandler(401, 'Unauthorized');
-	}
-
-	const userId = getUserIdFromUIDCookie(UID, prefixRegister, next);
+	const userId = getUserIdFromUIDCookie(req.UID, prefixRegister, next);
 	const user = await Users.findOne({ _id: userId });
 	if (user === null) return next(new ErrorHandler('Verify session error', 404));
 
@@ -164,9 +148,8 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
 const verifyToken = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
-	const { UID } = req.signedCookies;
 
-	const userId = getUserIdFromUIDCookie(UID, prefixForgotPassword, next);
+	const userId = getUserIdFromUIDCookie(req.UID, prefixForgotPassword, next);
 	const user = await Users.findOne({ _id: userId });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
 
@@ -186,9 +169,8 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 
 const resetPassword = asyncHandler(async (req, res, next) => {
 	const { password } = req.body;
-	const { UID } = req.signedCookies;
 
-	const userId = getUserIdFromUIDCookie(UID, prefixResetPasswordToken, next);
+	const userId = getUserIdFromUIDCookie(req.UID, prefixResetPasswordToken, next);
 	const hashedPassword = bcrypt.hashSync(password);
 	const user = await Users.findOneAndUpdate({ _id: userId }, { password: hashedPassword });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
@@ -201,10 +183,8 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
 const updateProfile = asyncHandler(async (req, res, next) => {
 	const { avatar, name, gender, dob } = req.body;
-	const { token } = req.signedCookies;
 
-	const userId = getUserIdFromToken(token, next);
-	const user = await Users.findOneAndUpdate({ _id: userId }, { avatar, name, gender, dob });
+	const user = await Users.findOneAndUpdate({ _id: req.user._id }, { avatar, name, gender, dob });
 	if (!user) return next(new ErrorHandler('User not found', 404));
 
 	res.status(200).json({
@@ -213,12 +193,12 @@ const updateProfile = asyncHandler(async (req, res, next) => {
 });
 
 const getUserProfile =  asyncHandler(async (req, res, next) => {
-	const userId = req.params.userId ?? getUserIdFromToken(req.signedCookies.token, next);
+	const userId = req.params.userId ?? req.user._id;
 	const user = await Users.findById(userId);
 	if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
 	res.status(200).json({
-		message: 'Get user profile successfully',
+		message: 'Get profile successfully',
 		profile:{
 			avatar: user.avatar,
 			banner: user.banner,
