@@ -5,6 +5,7 @@ const ErrorHandler = require('../utils/errorHandler');
 const { sendEmail, send } = require('../utils/mailer');
 const { Encrypter } = require('../utils/encrypter');
 const constants = require('../constants');
+const bcrypt = require("bcryptjs");
 
 const encrypter = new Encrypter();
 const prefixRegister = 'register-';
@@ -113,11 +114,10 @@ const findUser = asyncHandler(async (req, res, next) => {
 const forgotPassword = asyncHandler(async (req, res, next) => {
 	const { email } = req.body;
 
-	const user = await Users.findOne({ email });
-	if (!user) return next(new ErrorHandler('Email not found', 404));
-
 	const verifiedtoken = randomNumber(100000, 999999);
-	await Users.updateOne({ _id: user._id, verifiedtoken: verifiedtoken });
+
+	const user = await Users.findOneAndUpdate({ email },{ verifiedtoken: verifiedtoken});
+	if (!user) return next(new ErrorHandler('Email not found', 404));
 
 	if (constants.NODE_ENV !== 'DEVELOPMENT') {
 		sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
@@ -135,14 +135,14 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
 	const { UID } = req.cookies;
 
-	const userId = getUserIdFromToken(UID, prefixForgotPassword);
+	const userId = getUserIdFromToken(UID, prefixForgotPassword, next);
 	const user = await Users.findOne({ _id: userId });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
 
 	if (user.verifiedtoken == verifiedtoken) {
 		res.cookie('UID', encrypter.encrypt(prefixResetPasswordToken + user._id.toString()));
 		res.status(200).json({
-			message: 'Token is correct'
+			message: 'Verified Successfully! You can reset your password now'
 		});
 	} else {
 		return next(new ErrorHandler('Token is incorrect', 404));
@@ -153,11 +153,10 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 	const { password } = req.body;
 	const { UID } = req.cookies;
 
-	const userId = getUserIdFromToken(UID, prefixResetPasswordToken);
-	const user = await Users.findOne({ _id: userId });
+	const userId = getUserIdFromToken(UID, prefixResetPasswordToken, next);
+	const hashedPassword = bcrypt.hashSync(password);
+	const user = await Users.findOneAndUpdate({ _id: userId }, { password: hashedPassword });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
-
-	await Users.updateOne({ _id: user._id }, { password: password });
 
 	res.clearCookie('UID');
 	res.status(200).json({
@@ -165,7 +164,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 	});
 });
 
-const getUserIdFromToken = (token, prefix) => {
+const getUserIdFromToken = (token, prefix, next) => {
 	try {
 		const dencrypt = encrypter.dencrypt(token);
 		const userId = dencrypt.replace(prefix, '');

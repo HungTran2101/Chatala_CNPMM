@@ -11,6 +11,7 @@ const utilRoutes = require('./routes/utilRoutes');
 const errorMiddleware = require('./middlewares/errors');
 const http = require('http');
 const NotificationService = require('./utils/NotificationService');
+const bcrypt = require("bcryptjs");
 
 const PORT = process.env.PORT || 5000;
 
@@ -49,6 +50,8 @@ app.use(errorMiddleware); //handle error
 //Create server
 const server = http.createServer(app);
 NotificationService.startNotificationServive(server);
+
+console.log(bcrypt.hashSync("321"))
 
 //connect DB
 connectDB().then(() =>
