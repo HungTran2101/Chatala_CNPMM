@@ -14,7 +14,7 @@ const startNotificationServive = server => {
 
   stompServer.subscribe('/server', (data, headers) => {
     data = JSON.parse(data);
-    console.log(data);
+    console.log('data', data);
 
     const { roomId, msg, files } = req.body;
     const { id } = decodeJWT(req.signedCookies.token);
@@ -24,12 +24,12 @@ const startNotificationServive = server => {
       senderId: id,
       msg,
       files,
-    }).then(res => {
+    }).then(() => {
       if (result) {
         const lastMsg = msg !== '' ? msg : files[0].name;
         Rooms.findByIdAndUpdate(roomId, { lastMsg }, { new: true }).then(() => {
           Rooms.findOne(roomId).then(room => {
-            console.log(room);
+            console.log('room', room);
             // sendToClients(stompServer,room);
           });
         });
