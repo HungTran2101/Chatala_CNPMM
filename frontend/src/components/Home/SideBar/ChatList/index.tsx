@@ -18,10 +18,17 @@ const ChatList = ({ selected, setSelected }: IChatList) => {
   const context = useGlobalContext();
 
   const roomSelect = async (index: number) => {
-    const result = await RoomApi.getRoomInfo(context.roomList[index].roomInfo._id)
-    
-    context.setRoomInfo({roomName: result.roomName,roomInfo: result.roomInfo, roomAvatar: result.roomAvatar})
-    context.setRoomMsg(result.messages)
+    const result = await RoomApi.getRoomInfo(
+      context.roomList[index].roomInfo._id
+    );
+
+    context.setRoomInfo({
+      roomName: result.roomName,
+      roomInfo: result.roomInfo,
+      roomAvatar: result.roomAvatar,
+    });
+    context.setRoomMsg(result.messages);
+    context.setRoomChoosen(true)
   };
 
   return (

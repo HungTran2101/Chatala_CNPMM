@@ -6,6 +6,8 @@ import {
 } from "../utils/types";
 
 export type GlobalContent = {
+  roomChoosen: boolean,
+  setRoomChoosen: (value: boolean) => void,
   roomList: roomInfo[];
   setRoomList: (value: roomInfo[]) => void;
   roomMsg: messageType[];
@@ -17,6 +19,8 @@ export type GlobalContent = {
 };
 
 export const GlobalContext = createContext<GlobalContent>({
+  roomChoosen: false,
+  setRoomChoosen: () => {},
   roomList: [],
   setRoomList: () => {},
   roomMsg: [],
@@ -64,10 +68,12 @@ export const GlobalProvider = ({ children }: any) => {
     password: "",
   });
   const [roomList, setRoomList] = useState<roomInfo[]>([]);
-
+  const [roomChoosen, setRoomChoosen] = useState(false);
   return (
     <GlobalContext.Provider
       value={{
+        roomChoosen,
+        setRoomChoosen,
         roomList,
         setRoomList,
         roomMsg,

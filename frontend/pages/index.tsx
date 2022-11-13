@@ -29,7 +29,7 @@ const Home = () => {
         <TopBar />
         <S.Wrapper>
           <SideBar />
-          {context.roomMsg?.length > 0 ? <ChatArea /> : <Welcome />}
+          {context.roomChoosen ? <ChatArea /> : <Welcome />}
         </S.Wrapper>
       </S.HomeContainer>
     </>
