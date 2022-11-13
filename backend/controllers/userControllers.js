@@ -59,8 +59,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 const verifyAccount = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
-
-	const userId = getUserIdFromUIDCookie(req.UID, prefixRegister, next);
+	
+	const userId = getUserIdFromUIDCookie(req.signedCookies.UID, prefixRegister, next);
 	const user = await Users.findOne({ _id: userId });
 	if (user === null) return next(new ErrorHandler('Verify session error', 404));
 
@@ -149,7 +149,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 const verifyToken = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
 
-	const userId = getUserIdFromUIDCookie(req.UID, prefixForgotPassword, next);
+	const userId = getUserIdFromUIDCookie(req.signedCookies.UID, prefixForgotPassword, next);
 	const user = await Users.findOne({ _id: userId });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
 
@@ -170,7 +170,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 const resetPassword = asyncHandler(async (req, res, next) => {
 	const { password } = req.body;
 
-	const userId = getUserIdFromUIDCookie(req.UID, prefixResetPasswordToken, next);
+	const userId = getUserIdFromUIDCookie(req.signedCookies.UID, prefixResetPasswordToken, next);
 	const hashedPassword = bcrypt.hashSync(password);
 	const user = await Users.findOneAndUpdate({ _id: userId }, { password: hashedPassword });
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
