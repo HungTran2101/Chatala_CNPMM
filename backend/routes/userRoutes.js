@@ -10,7 +10,8 @@ const {
   resetPassword,
   updateProfile,
   getUserProfile,
-  updatePassword
+  updatePassword,
+  logoutUser
 } = require("../controllers/userControllers");
 
 const router = express.Router();
@@ -18,6 +19,7 @@ const router = express.Router();
 router.route("/register").post(registerUser);
 router.route("/register/verify-account").post(verifyAccount);
 router.route("/login").post(loginUser);
+router.route("/logout").get(logoutUser);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/forgot-password/verify-token").post(verifyToken);
 router.route("/forgot-password/reset-password").post(resetPassword);

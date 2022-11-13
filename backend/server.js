@@ -48,8 +48,6 @@ app.use('/api/room', roomRoutes);
 //middleware
 app.use(errorMiddleware); //handle error
 
-console.log(bcrypt.compareSync('Test123456','$2a$10$FD0lXGNTM6NX1ZGEOHCS4.Ye8OepcZ8KY1D7UOSi488mNlDbK8OBe'));
-
 // add httpserver
 const server = http.createServer(app);
 NotificationService.startNotificationServive(server);

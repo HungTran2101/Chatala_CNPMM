@@ -18,12 +18,9 @@ const prefixResetPasswordToken = 'resetPwToken-';
 const cookieOptions = {
   signed: true,
   httpOnly: true,
-  // secure: false,
-  // sameSite: 'none',
+  secure: true,
+  sameSite: 'none',
 };
-if (constants.NODE_ENV === 'DEVELOPMENT') {
-  delete cookieOptions.secure;
-}
 
 const getUserIdFromUIDCookie = (token, prefix, next) => {
   try {
@@ -111,6 +108,13 @@ const loginUser = asyncHandler(async (req, res, next) => {
   } else {
     return next(new ErrorHandler('Email not found or Incorrect Password', 404));
   }
+});
+
+const logoutUser = asyncHandler(async (req, res, next) => {
+	res.clearCookie('token');
+	res.status(200).json({
+		message: 'Logout Successfully!'
+	});
 });
 
 const findUser = asyncHandler(async (req, res, next) => {
@@ -215,6 +219,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
   if (!user) return next(new ErrorHandler('User not found', 404));
 
 	res.status(200).json({
+		id: user._id,
 		name: user.name,
 		email: user.email,
 		avatar: user.avatar,
@@ -229,7 +234,15 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
   const user = await Users.findById(userId);
   if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
-	res.status(200).json(user);
+	res.status(200).json({
+		id: user._id,
+		name: user.name,
+		email: user.email,
+		avatar: user.avatar,
+		banner: user.banner,
+		gender: user.gender,
+		dob: user.dob
+	});
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
@@ -258,4 +271,5 @@ module.exports = {
   updateProfile,
   getUserProfile,
   updatePassword,
+  logoutUser
 };
