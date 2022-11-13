@@ -11,8 +11,6 @@ const sendMessage = asyncHandler(async (req, res, next) => {
 
   const id = req.user._id;
 
-  console.log(req.body);
-
   const result = await Messages.create({
     roomId,
     senderId: id,
