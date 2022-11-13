@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const friendRoutes = require('./routes/friendRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const utilRoutes = require('./routes/utilRoutes');
+const roomRoutes = require('./routes/roomRoutes');
 const errorMiddleware = require('./middlewares/errors');
 const http = require('http');
 const NotificationService = require('./utils/NotificationService');
@@ -42,6 +43,8 @@ app.get('/', (req, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/friend', friendRoutes);
+app.use('/api/util', utilRoutes)
+app.use('/api/room', roomRoutes);
 
 //middleware
 app.use(errorMiddleware); //handle error
