@@ -259,7 +259,7 @@ const ChatArea = () => {
                         onClick={() => setToggleEmoji(true)}
                       />
                       <S.ChatAreaMainInputText
-                        username={UserName}
+                        username={context.roomInfo.roomName}
                         contentEditable
                         ref={chatInput}
                         onInput={e =>
