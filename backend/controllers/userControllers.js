@@ -210,6 +210,18 @@ const getUserProfile =  asyncHandler(async (req, res, next) => {
 	});
 });
 
+const updatePassword = asyncHandler(async (req, res, next) => {
+	const { password } = req.body;
+
+	const hashedPassword = bcrypt.hashSync(password);
+	const user = await Users.findOneAndUpdate({ _id: req.user._id }, { password: hashedPassword });
+	if (!user) return next(new ErrorHandler('Update password failed', 404));
+
+	res.status(200).json({
+		message: 'Update password successfully'
+	});
+})
+
 module.exports = {
 	registerUser,
 	loginUser,
@@ -219,5 +231,6 @@ module.exports = {
 	verifyToken,
 	resetPassword,
 	updateProfile,
-	getUserProfile
+	getUserProfile,
+	updatePassword
 };
