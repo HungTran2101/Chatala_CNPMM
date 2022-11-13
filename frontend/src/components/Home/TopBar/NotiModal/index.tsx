@@ -3,12 +3,14 @@ import * as React from 'react';
 import { NotiListArray } from '../../../../utils/dataConfig';
 import Image from 'next/image';
 import { useOutsideClick } from '../../../Global/ProcessFunctions';
+import { IoPersonAdd } from 'react-icons/io5';
 
 interface INotiModal {
   setActiveNotiModal: (isActive: boolean) => void;
+  isFriendRequest?: boolean;
 }
 
-const NotiModal = ({ setActiveNotiModal }: INotiModal) => {
+const NotiModal = ({ setActiveNotiModal, isFriendRequest }: INotiModal) => {
   const handleOutsideClick = () => {
     setActiveNotiModal(false);
   };
@@ -16,8 +18,8 @@ const NotiModal = ({ setActiveNotiModal }: INotiModal) => {
   const NotiRef = useOutsideClick(handleOutsideClick);
 
   return (
-    <S.Noti ref={NotiRef}>
-      <S.NotiTitles>Friend Requests</S.NotiTitles>
+    <S.Noti isFriendRequest={true} ref={NotiRef}>
+      <S.NotiTitles>{isFriendRequest ? 'Search answer' : 'Friend Requests'}</S.NotiTitles>
       {NotiListArray.map((data, index) => (
         <S.NotiItem key={index}>
           <S.NotiInfo>
@@ -29,8 +31,8 @@ const NotiModal = ({ setActiveNotiModal }: INotiModal) => {
               <S.NotiNumFriend>{`${data.numFriends} Friends`}</S.NotiNumFriend>
             </S.NotiNameWrapper>
           </S.NotiInfo>
-          <S.NotiAccept>Accept</S.NotiAccept>
-          <S.NotiCancel>Cancel</S.NotiCancel>
+          <S.NotiAccept>{isFriendRequest ? <IoPersonAdd fontSize={'22px'}/> : 'Accept'}</S.NotiAccept>
+        {!isFriendRequest && <S.NotiCancel>Cancel</S.NotiCancel>}
         </S.NotiItem>
       ))}
     </S.Noti>
