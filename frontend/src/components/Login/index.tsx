@@ -3,6 +3,8 @@ import { Formik, ErrorMessage } from 'formik';
 import Link from 'next/link';
 import * as S from './Login.styled';
 import * as Yup from 'yup';
+import Router from 'next/router';
+import { UsersApi } from '../../services/api/users';
 
 const Login = () => {
   const initialValues = {
@@ -27,8 +29,9 @@ const Login = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(data) => {
-          console.log('submits: ', data);
+        onSubmit={async (data) => {
+          const result = await UsersApi.login(data)
+          Router.push('/')
         }}
       >
         {({ errors, touched }) => (
