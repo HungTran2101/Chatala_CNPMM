@@ -8,26 +8,27 @@ const { sendToClients } = require('../utils/NotificationService');
 // save message
 const sendMessage = asyncHandler(async (req, res, next) => {
   const { roomId, msg, files } = req.body;
-  const { id } = decodeJWT(req.signedCookies.token);
+
+  const id = req.user._id;
 
   console.log(req.body);
 
-  // const result = await Messages.create({
-  //   roomId,
-  //   senderId: id,
-  //   msg,
-  //   files,
-  // });
-  // if (result) {
-  //   const lastMsg = msg !== '' ? msg : files[0].name;
-  //   const room = await Rooms.findByIdAndUpdate(
-  //     roomId,
-  //     { lastMsg },
-  //     { new: true }
-  //   );
+  const result = await Messages.create({
+    roomId,
+    senderId: id,
+    msg,
+    // files,
+  });
+  if (result) {
+    const lastMsg = msg !== '' ? msg : files[0].name;
+    const room = await Rooms.findByIdAndUpdate(
+      roomId,
+      { lastMsg },
+      { new: true }
+    );
 
-  //   sendToClients(room, msg, id);
-  // }
+    sendToClients(room, result, id);
+  }
 
   res.status(200).json({
     result,

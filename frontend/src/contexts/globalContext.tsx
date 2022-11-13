@@ -1,13 +1,9 @@
-import React, { createContext, useContext, useState } from "react";
-import {
-  messageType,
-  registerType,
-  roomInfo,
-} from "../utils/types";
+import React, { createContext, useContext, useState } from 'react';
+import { messageType, registerType, roomInfo } from '../utils/types';
 
 export type GlobalContent = {
-  roomChoosen: boolean,
-  setRoomChoosen: (value: boolean) => void,
+  roomChoosen: boolean;
+  setRoomChoosen: (value: boolean) => void;
   roomList: roomInfo[];
   setRoomList: (value: roomInfo[]) => void;
   roomMsg: messageType[];
@@ -26,21 +22,21 @@ export const GlobalContext = createContext<GlobalContent>({
   roomMsg: [],
   setRoomMsg: () => {},
   roomInfo: {
-    roomName: "",
-    roomAvatar: "",
+    roomName: '',
+    roomAvatar: '',
     roomInfo: {
-      createdAt: "",
-      groupName: "",
+      createdAt: '',
+      groupName: '',
       isGroup: false,
-      lastMsg: "",
-      updatedAt: "",
+      lastMsg: '',
+      updatedAt: '',
       users: [],
       __v: 0,
-      _id: "",
+      _id: '',
     },
   },
   setRoomInfo: () => {},
-  registerInfo: { name: "", email: "", password: "" },
+  registerInfo: { name: '', email: '', password: '' },
   setRegisterInfo: () => {},
 });
 
@@ -49,23 +45,23 @@ export const useGlobalContext = () => useContext(GlobalContext);
 export const GlobalProvider = ({ children }: any) => {
   const [roomMsg, setRoomMsg] = useState<messageType[]>([]);
   const [roomInfo, setRoomInfo] = useState<roomInfo>({
-    roomName: "-1",
-    roomAvatar: "",
+    roomName: '-1',
+    roomAvatar: '',
     roomInfo: {
-      createdAt: "",
-      groupName: "",
+      createdAt: '',
+      groupName: '',
       isGroup: false,
-      lastMsg: "",
-      updatedAt: "",
+      lastMsg: '',
+      updatedAt: '',
       users: [],
       __v: 0,
-      _id: "",
+      _id: '',
     },
   });
   const [registerInfo, setRegisterInfo] = useState<registerType>({
-    name: "",
-    email: "",
-    password: "",
+    name: '',
+    email: '',
+    password: '',
   });
   const [roomList, setRoomList] = useState<roomInfo[]>([]);
   const [roomChoosen, setRoomChoosen] = useState(false);

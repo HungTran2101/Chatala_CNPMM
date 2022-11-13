@@ -21,10 +21,13 @@ const startNotificationServive = server => {
   });
 };
 
-const sendToClients = (room, message, senderId) => {
+const sendToClients = (room, result, senderId) => {
+  result.fromSender = false;
+  delete result.senderId;
   room.users.map(client => {
-    if (client.uid !== senderId) {
-      stompServer.send('/user/' + client.userId, {}, JSON.stringify(message));
+    if (client.uid.toString() !== senderId.toString()) {
+      console.log('sent');
+      stompServer.send('/user/' + client.uid, {}, JSON.stringify(result));
     }
   });
 };

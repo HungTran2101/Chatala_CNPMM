@@ -18,12 +18,13 @@ const TopBar = () => {
 
   const getProfile = async () => {
     const result = await UsersApi.profile();
-    setProfileData(result)
-  }
+    setProfileData(result);
+    sessionStorage.setItem('userId', result._id);
+  };
 
   useEffect(() => {
     getProfile();
-  }, [])
+  }, []);
 
   return (
     <S.Container>
@@ -47,9 +48,15 @@ const TopBar = () => {
           </S.LogoContainer>
           <S.Search>
             <S.SearchIcon />
-            <S.SearchInput placeholder='Search...' onClick={()=> setActiveFriendModal(true)} />
+            <S.SearchInput
+              placeholder='Search...'
+              onClick={() => setActiveFriendModal(true)}
+            />
             {activeFriendModal && (
-              <NotiModal isFriendRequest={true} setActiveNotiModal={setActiveFriendModal} />
+              <NotiModal
+                isFriendRequest={true}
+                setActiveNotiModal={setActiveFriendModal}
+              />
             )}
           </S.Search>
           <S.Option>
@@ -81,7 +88,5 @@ const TopBar = () => {
     </S.Container>
   );
 };
-
-
 
 export default TopBar;
