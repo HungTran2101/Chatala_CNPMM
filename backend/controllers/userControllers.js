@@ -18,8 +18,8 @@ const prefixResetPasswordToken = 'resetPwToken-';
 const cookieOptions = {
   signed: true,
   httpOnly: true,
-  secure: true,
-  sameSite: 'none',
+  // secure: false,
+  // sameSite: 'none',
 };
 if (constants.NODE_ENV === 'DEVELOPMENT') {
   delete cookieOptions.secure;
