@@ -32,6 +32,9 @@ export const UsersApi = {
     login: async function (data: UserLogin): Promise<any> {
         return await http.post(API_URL.login, data);
     },
+    profile: async function (): Promise<any> {
+        return await http.get(API_URL.profile);
+    },
     updateProfile: async function (data: UserUpdateProfile): Promise<any> {
         return await http.post(API_URL.updateProfile, data)
     },

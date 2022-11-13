@@ -3,7 +3,7 @@ import { Formik, ErrorMessage } from 'formik';
 import Link from 'next/link';
 import * as S from './Login.styled';
 import * as Yup from 'yup';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { UsersApi } from '../../services/api/users';
 
 const Login = () => {
@@ -23,6 +23,7 @@ const Login = () => {
         'Password minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number.'
       ),
   });
+  const router = useRouter();
   return (
     <FormTemplate>
       <S.Suggest>Signin to this fancy webchat!</S.Suggest>
@@ -30,8 +31,15 @@ const Login = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (data) => {
-          const result = await UsersApi.login(data)
-          Router.push('/')
+          try {
+            const result = await UsersApi.login(data)
+            if (result) {
+              router.push('/')
+            }
+          } catch (error) {
+            alert("Wrong password or email")
+          }
+         
         }}
       >
         {({ errors, touched }) => (
@@ -61,7 +69,7 @@ const Login = () => {
         )}
       </Formik>
       <S.Register>
-        <Link href='/register'>New here? Let's Sign Up!</Link>
+        <Link href='/register'>New here? Let&apos;s Sign Up!</Link>
       </S.Register>
     </FormTemplate>
   );

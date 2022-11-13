@@ -5,6 +5,7 @@ import { UserAvatar, UserName } from '../../../../utils/dataConfig';
 
 import * as S from './UserInfo.styled';
 import SettingInfo from '../SettingInfo';
+import { handleShowData } from '../../../../utils/common';
 
 interface IUserInfo {
   phoneNumber: string;
@@ -38,7 +39,7 @@ const UserInfo = ({
               <HiOutlineX onClick={() => setSeeAvatar(false)} />
             </S.Title>
             <S.Figure>
-              <Image src={UserAvatar} layout='fill' objectFit='contain' />
+              <Image src={avatar} layout='fill' objectFit='contain' alt='' />
             </S.Figure>
           </S.ModalAvatarBody>
         </S.ModalAvatar>
@@ -52,15 +53,15 @@ const UserInfo = ({
               <HiOutlineX onClick={() => setUserInfoModal(false)} />
             </S.Title>
             <S.Banner>
-              <Image src={UserAvatar} layout='fill' objectFit='cover' />
+              <Image src={banner} layout='fill' objectFit='cover' alt='' />
             </S.Banner>
             <S.Avatar onClick={() => setSeeAvatar(true)}>
-              <Image src={UserAvatar} layout='fill' objectFit='contain' />
+              <Image src={avatar} layout='fill' objectFit='contain' alt='' />
             </S.Avatar>
           </S.Header>
           <S.Content>
             <S.Description>
-              <span>Phone</span>
+              <span>Email</span>
               <span>Fullname</span>
               <span>Gender</span>
               <span>Date of Birth</span>
@@ -69,7 +70,7 @@ const UserInfo = ({
               <span>{phoneNumber}</span>
               <span>{name}</span>
               <span>{gender}</span>
-              <span>{dob}</span>
+              <span>{handleShowData(dob)}</span>
             </S.Info>
           </S.Content>
           <S.Button>
@@ -78,10 +79,10 @@ const UserInfo = ({
           </S.Button>
           {editInfo && (
             <SettingInfo
-              name={UserName}
-              gender='male'
-              dob='01/01/2001'
-              avatar={UserAvatar}
+              name={name}
+              gender={gender}
+              dob={dob}
+              avatar={avatar}
               setEditInfo={setEditInfo}
             />
           )}

@@ -14,8 +14,10 @@ import { Formik, ErrorMessage } from "formik";
 import * as S from "./SettingInfo.styled";
 import { UserAvatar } from "../../../../utils/dataConfig";
 import CropImage from "./CropImage";
+import { UsersApi } from "../../../../services/api/users";
+import { useRouter } from "next/router";
 
-interface ISetingInfo {
+interface ISettingInfo {
   name: string;
   gender: string;
   dob: string;
@@ -29,7 +31,8 @@ const SettingInfo = ({
   dob,
   avatar,
   setEditInfo,
-}: ISetingInfo) => {
+}: ISettingInfo) => {
+  const router = useRouter();
   const [previewAvt, setPreviewAvt] = useState<string>(avatar);
   // const [cropImage, setCropImage] = useState<any>();
   const [cropImage, setCropImage] = useState<string | ArrayBuffer | null>(null);
@@ -67,6 +70,8 @@ const SettingInfo = ({
     const newData = values;
     newData.name = values.name.trim().replace(/ +/g, " ");
     console.log("submits: ", newData);
+    const result = UsersApi.updateProfile(values)
+    console.log('result update: ', result)
   };
 
   return (
@@ -93,10 +98,10 @@ const SettingInfo = ({
                   <HiOutlineX onClick={() => toggleEvent()} />
                 </S.Title>
                 <S.Banner>
-                  <Image src={UserAvatar} layout="fill" objectFit="cover" />
+                  <Image src={avatar} layout="fill" objectFit="cover" alt="" />
                 </S.Banner>
                 <S.AvatarLabel htmlFor="avatar">
-                  <Image src={previewAvt} layout="fill" objectFit="contain" />
+                  <Image src={avatar} layout="fill" objectFit="contain" alt="" />
                 </S.AvatarLabel>
               </S.Header>
               <S.Content>
@@ -143,7 +148,7 @@ const SettingInfo = ({
                       <S.DatePickerWrapperStyles />
                     </S.DatePickerElement>
                     <S.GroupButton>
-                      <S.Button type="submit">Update</S.Button>
+                      <S.Button type="submit" onClick={() => router.reload()}>Update</S.Button>
                       <S.Button onClick={() => toggleEvent()}>Cancel</S.Button>
                     </S.GroupButton>
                   </S.SetWidth>
