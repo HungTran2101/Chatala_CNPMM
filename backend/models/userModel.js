@@ -41,7 +41,7 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.methods.matchPassword = async function (password) {
-  const user = await Users.findOne({phone: this.phone}).select("password")
+  const user = await Users.findOne({email: this.email}).select("password")
   return bcrypt.compareSync(password, user.password);
 };
 
