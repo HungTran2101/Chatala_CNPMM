@@ -173,7 +173,14 @@ const updateProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findOneAndUpdate({ _id: req.user._id }, { avatar, name, gender, dob });
 	if (!user) return next(new ErrorHandler('User not found', 404));
 
-	res.status(200).json(user);
+	res.status(200).json({
+		name: user.name,
+		email: user.email,
+		avatar: user.avatar,
+		banner: user.banner,
+		gender: user.gender,
+		dob: user.dob
+	});
 });
 
 const getUserProfile = asyncHandler(async (req, res, next) => {
@@ -181,7 +188,14 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findById(userId);
 	if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
-	res.status(200).json(user);
+	res.status(200).json({
+		name: user.name,
+		email: user.email,
+		avatar: user.avatar,
+		banner: user.banner,
+		gender: user.gender,
+		dob: user.dob
+	});
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {

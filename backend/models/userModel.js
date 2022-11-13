@@ -28,13 +28,11 @@ const userSchema = mongoose.Schema(
       unique: [true, "Email existed"],
     },
     verifiedtoken: {
-      type: Number,
-      select: false,
+      type: Number
     },
     active: {
       type: Boolean,
-      default: false,
-      select: false,
+      default: false
     },
     gender: { type: String, default: "male" },
     dob: { type: Date, default: new Date() },
