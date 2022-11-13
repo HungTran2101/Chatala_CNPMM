@@ -61,7 +61,7 @@ const Login = () => {
         )}
       </Formik>
       <S.Register>
-        <Link href='/register'>New here? Let's Sign Up!</Link>
+        <Link href='/register'>New here? Let&apos;s Sign Up!</Link>
       </S.Register>
     </FormTemplate>
   );
