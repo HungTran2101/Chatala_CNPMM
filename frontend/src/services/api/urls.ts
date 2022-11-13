@@ -1,4 +1,5 @@
-const BASEURL = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000'; // Staging
+export const BASEURL =
+  process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000'; // Staging
 
 const API_BASE = `${BASEURL}/api`;
 

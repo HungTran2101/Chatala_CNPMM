@@ -26,7 +26,6 @@ const sendToClients = (room, result, senderId) => {
   delete result.senderId;
   room.users.map(client => {
     if (client.uid.toString() !== senderId.toString()) {
-      console.log('sent');
       stompServer.send('/user/' + client.uid, {}, JSON.stringify(result));
     }
   });

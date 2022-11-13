@@ -14,6 +14,7 @@ import DropZone from 'react-dropzone';
 import { messageType } from '../../../utils/types';
 import SockJS from 'sockjs-client';
 import { messageApi } from '../../../services/api/messages';
+import { BASEURL } from '../../../services/api/urls';
 const Stomp = require('stompjs');
 
 type FormValues = {
@@ -128,7 +129,7 @@ const ChatArea = () => {
   };
 
   const connectServer = () => {
-    let Sock = new SockJS('http://localhost:5000/' + 'ws');
+    let Sock = new SockJS(BASEURL + '/ws');
     let stompClient = Stomp.over(Sock);
     stompClient.debug = null;
     stompClient.heartbeat = 0;
@@ -151,15 +152,15 @@ const ChatArea = () => {
   const onPrivateMessage = (message: any) => {
     message.body.replace('\\', '');
 
-    const JsonMessage = JSON.parse(message.body);
-
-    console.log('message receive');
-
-    setListMessage((listMessage: any) => [JsonMessage, ...listMessage]);
+    setListMessage((listMessage: any) => [
+      JSON.parse(message.body),
+      ...listMessage,
+    ]);
   };
 
   useEffect(() => {
     connectServer();
+    console.log('useEffect');
   }, []);
 
   return (
