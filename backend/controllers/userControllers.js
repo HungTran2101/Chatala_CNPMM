@@ -51,11 +51,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 	});
 
 	const encryptedUID = encrypter.encrypt(prefixRegister + newUser._id.toString());
-	res.cookie('UID', encryptedUID, {
-		signed: true,
-		httpOnly: true
-		// secure: true,
-	});
+	res.cookie('UID', encryptedUID, cookieOptions);
 
 	res.status(200).json({
 		message: 'Register Successfully! Check your email to verify your account'
@@ -87,13 +83,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
 	if (user && user.active) {
 		if (await user.matchPassword(password)) {
-			res.cookie('token', generateJWT(user._id), {
-				signed: true,
-				httpOnly: true,
-				secure: true,
-				sameSite: 'none'
-				// secure: true,
-			});
+			res.cookie('token', generateJWT(user._id), cookieOptions);
 			res.status(200).json({
 				avatar: user.avatar,
 				banner: user.banner,
@@ -142,10 +132,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
 	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
 
-	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()), {
-		signed: true,
-		httpOnly: true
-	});
+	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()), cookieOptions);
 	res.status(200).json({
 		message: 'Check your email to reset your password'
 	});
@@ -159,11 +146,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
 
 	if (user.verifiedtoken == verifiedtoken) {
-		res.cookie('UID', encrypter.encrypt(prefixResetPasswordToken + user._id.toString()), {
-			signed: true,
-			httpOnly: true
-			// secure: true,
-		});
+		res.cookie('UID', encrypter.encrypt(prefixResetPasswordToken + user._id.toString()), cookieOptions);
 		res.status(200).json({
 			message: 'Verified Successfully! You can reset your password now'
 		});
