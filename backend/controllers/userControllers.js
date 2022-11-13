@@ -2,15 +2,24 @@ const asyncHandler = require('express-async-handler');
 const Users = require('../models/userModel');
 const { generateJWT, randomNumber, decodeJWT } = require('../utils/utilFunctions');
 const ErrorHandler = require('../utils/errorHandler');
-const { sendEmail, send } = require('../utils/mailer');
+const { sendEmail } = require('../utils/mailer');
 const { Encrypter } = require('../utils/encrypter');
-const constants = require('../constants');
 const bcrypt = require('bcryptjs');
+const constants = require('../constants');
 
 const encrypter = new Encrypter();
 const prefixRegister = 'register-';
 const prefixForgotPassword = 'forgotPw-';
 const prefixResetPasswordToken = 'resetPwToken-';
+const cookieOptions = {
+	signed: true,
+	httpOnly: true,
+	secure: true,
+	sameSite: 'none'
+};
+if (constants.NODE_ENV === 'DEVELOPMENT') {
+	delete cookieOptions.secure;
+}
 
 const getUserIdFromUIDCookie = (token, prefix, next) => {
 	try {
@@ -37,20 +46,12 @@ const registerUser = asyncHandler(async (req, res, next) => {
 		verifiedtoken
 	});
 
-	if (constants.NODE_ENV !== 'DEVELOPMENT') {
-		sendEmail(email, 'Verify your account', 'Verified Token: ' + verifiedtoken).catch(() => {
-			Users.deleteOne({ _id: newUser._id });
-		});
-	}
-
-	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
+	sendEmail(email, 'Verify your account', 'Verified Token: ' + verifiedtoken).catch(() => {
+		Users.deleteOne({ _id: newUser._id });
+	});
 
 	const encryptedUID = encrypter.encrypt(prefixRegister + newUser._id.toString());
-	res.cookie('UID', encryptedUID, {
-		signed: true,
-		httpOnly: true
-		// secure: true,
-	});
+	res.cookie('UID', encryptedUID, cookieOptions);
 
 	res.status(200).json({
 		message: 'Register Successfully! Check your email to verify your account'
@@ -59,7 +60,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 const verifyAccount = asyncHandler(async (req, res, next) => {
 	const { verifiedtoken } = req.body;
-	
+
 	const userId = getUserIdFromUIDCookie(req.signedCookies.UID, prefixRegister, next);
 	const user = await Users.findOne({ _id: userId });
 	if (user === null) return next(new ErrorHandler('Verify session error', 404));
@@ -82,11 +83,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
 	if (user && user.active) {
 		if (await user.matchPassword(password)) {
-			res.cookie('token', generateJWT(user._id), {
-				signed: true,
-				httpOnly: true
-				// secure: true,
-			});
+			res.cookie('token', generateJWT(user._id), cookieOptions);
 			res.status(200).json({
 				avatar: user.avatar,
 				banner: user.banner,
@@ -131,16 +128,9 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 	const user = await Users.findOneAndUpdate({ email }, { verifiedtoken: verifiedtoken });
 	if (!user) return next(new ErrorHandler('Email not found', 404));
 
-	if (constants.NODE_ENV !== 'DEVELOPMENT') {
-		sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
-	}
+	sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
 
-	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
-
-	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()), {
-		signed: true,
-		httpOnly: true
-	});
+	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()), cookieOptions);
 	res.status(200).json({
 		message: 'Check your email to reset your password'
 	});
@@ -154,11 +144,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	if (!user) return next(new ErrorHandler('Validate session error', 404));
 
 	if (user.verifiedtoken == verifiedtoken) {
-		res.cookie('UID', encrypter.encrypt(prefixResetPasswordToken + user._id.toString()), {
-			signed: true,
-			httpOnly: true
-			// secure: true,
-		});
+		res.cookie('UID', encrypter.encrypt(prefixResetPasswordToken + user._id.toString()), cookieOptions);
 		res.status(200).json({
 			message: 'Verified Successfully! You can reset your password now'
 		});
@@ -187,13 +173,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findOneAndUpdate({ _id: req.user._id }, { avatar, name, gender, dob });
 	if (!user) return next(new ErrorHandler('User not found', 404));
 
-	res.status(200).json({
-		avatar,
-		name,
-		gender,
-		dob,
-		email: user.email
-	});
+	res.status(200).json(user);
 });
 
 const getUserProfile = asyncHandler(async (req, res, next) => {
@@ -201,14 +181,7 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findById(userId);
 	if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
-	res.status(200).json({
-		avatar: user.avatar,
-		banner: user.banner,
-		name: user.name,
-		email: user.email,
-		gender: user.gender,
-		dob: user.dob
-	});
+	res.status(200).json(user);
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {

@@ -29,10 +29,12 @@ const userSchema = mongoose.Schema(
     },
     verifiedtoken: {
       type: Number,
+      select: false,
     },
     active: {
       type: Boolean,
       default: false,
+      select: false,
     },
     gender: { type: String, default: "male" },
     dob: { type: Date, default: new Date() },
