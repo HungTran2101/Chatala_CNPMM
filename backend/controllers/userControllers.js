@@ -5,11 +5,21 @@ const ErrorHandler = require('../utils/errorHandler');
 const { sendEmail } = require('../utils/mailer');
 const { Encrypter } = require('../utils/encrypter');
 const bcrypt = require('bcryptjs');
+const constants = require('../constants');
 
 const encrypter = new Encrypter();
 const prefixRegister = 'register-';
 const prefixForgotPassword = 'forgotPw-';
 const prefixResetPasswordToken = 'resetPwToken-';
+const cookieOptions = {
+	signed: true,
+	httpOnly: true,
+	secure: true,
+	sameSite: 'none'
+};
+if (constants.NODE_ENV === 'DEVELOPMENT') {
+	delete cookieOptions.secure;
+}
 
 const getUserIdFromUIDCookie = (token, prefix, next) => {
 	try {
