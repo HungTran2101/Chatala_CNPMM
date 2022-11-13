@@ -12,11 +12,11 @@ const getRoomList = asyncHandler(async (req, res, next) => {
     rooms.forEach((room) => {
       if (!room.isGroup) {
         let roomName =
-          room.users[0].uid === req.user._id
+          room.users[0].uid.toString() === req.user._id.toString()
             ? room.users[1].nickName
             : room.users[0].nickName;
         let roomAvatar =
-          room.users[0].uid === req.user._id
+          room.users[0].uid.toString() === req.user._id.toString()
             ? room.users[1].avatar
             : room.users[0].avatar;
         result.push({ roomName, roomAvatar, roomInfo: room });
