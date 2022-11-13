@@ -1,12 +1,17 @@
 require('colors');
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 const { connectDB } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+const friendRoutes = require('./routes/friendRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+const utilRoutes = require('./routes/utilRoutes');
 const errorMiddleware = require('./middlewares/errors');
-const NotificationService = require('./utils/NotificationService');
 const http = require('http');
-
+const NotificationService = require('./utils/NotificationService');
+const bcrypt = require('bcryptjs');
 const PORT = process.env.PORT || 5000;
 
 process.on('uncaughtException', err => {
@@ -16,6 +21,13 @@ process.on('uncaughtException', err => {
 });
 
 dotenv.config();
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3000',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 
 const app = express();
 app.use(cors(corsOptions));
