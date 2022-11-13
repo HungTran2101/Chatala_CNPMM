@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import * as S from './TopBar.styled';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserAvatar, UserName } from '../../../utils/dataConfig';
 import Logo from '../../../assets/imgs/LogoFullLong.png';
 import UserInfo from './UserInfo';
@@ -13,6 +13,16 @@ const TopBar = () => {
   const [userInfoModal, setUserInfoModal] = useState(false);
   const [activeNotiModal, setActiveNotiModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
+  const [profileData, setProfileData] = useState<any>();
+
+  const getProfile = async () => {
+    const result = await UsersApi.profile();
+    setProfileData(result)
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, [])
 
   return (
     <S.Container>
@@ -26,7 +36,7 @@ const TopBar = () => {
               objectFit='contain'
             />
           </S.Avatar>
-          <S.UserName>{UserName}</S.UserName>
+          <S.UserName>{profileData && profileData.name}</S.UserName>
         </S.LeftWrapper>
         <S.RightWrapper>
           <S.LogoContainer>
@@ -54,12 +64,12 @@ const TopBar = () => {
         </S.RightWrapper>
         {userInfoModal && (
           <UserInfo
-            phoneNumber='+84 123456789'
-            name={UserName}
-            gender='male'
-            dob='01/01/2001'
-            avatar=''
-            banner=''
+            phoneNumber={profileData.email}
+            name={profileData.name}
+            gender={profileData.gender}
+            dob={profileData.dob}
+            avatar={profileData.avatar}
+            banner={profileData.banner}
             setUserInfoModal={setUserInfoModal}
           />
         )}
@@ -67,5 +77,7 @@ const TopBar = () => {
     </S.Container>
   );
 };
+
+
 
 export default TopBar;
