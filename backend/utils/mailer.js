@@ -1,4 +1,5 @@
 var nodemailer = require('nodemailer');
+const constants = require('../constants');
 const emailConfig = require('../constants/email');
 
 const transporter = nodemailer.createTransport({
@@ -19,7 +20,11 @@ const sendEmail = async (email, subject, text) => {
 		text: text
 	};
 
-	await transporter.sendMail(mailOptions);
+	if (constants.NODE_ENV !== 'DEVELOPMENT') {
+		await transporter.sendMail(mailOptions);
+	} else {
+		console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
+	}
 };
 
 module.exports = { sendEmail };
