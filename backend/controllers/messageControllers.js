@@ -3,6 +3,8 @@ const Messages = require('../models/messageModel');
 const Rooms = require('../models/roomModel');
 const { decodeJWT } = require('../utils/utilFunctions');
 
+const { sendToClients } = require('../utils/NotificationService');
+
 // save message
 const sendMessage = asyncHandler(async (req, res, next) => {
   const { roomId, msg, files } = req.body;
@@ -16,7 +18,13 @@ const sendMessage = asyncHandler(async (req, res, next) => {
   });
   if (result) {
     const lastMsg = msg !== '' ? msg : files[0].name;
-    await Rooms.findByIdAndUpdate(roomId, { lastMsg }, { new: true });
+    const room = await Rooms.findByIdAndUpdate(
+      roomId,
+      { lastMsg },
+      { new: true }
+    );
+
+    sendToClients(room, msg, id);
   }
 
   res.status(200).json({
