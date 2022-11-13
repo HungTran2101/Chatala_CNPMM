@@ -188,25 +188,26 @@ const updateProfile = asyncHandler(async (req, res, next) => {
 	if (!user) return next(new ErrorHandler('User not found', 404));
 
 	res.status(200).json({
-		message: 'Update profile successfully'
+		avatar,
+		name,
+		gender,
+		dob,
+		email: user.email
 	});
 });
 
-const getUserProfile =  asyncHandler(async (req, res, next) => {
+const getUserProfile = asyncHandler(async (req, res, next) => {
 	const userId = req.params.userId ?? req.user._id;
 	const user = await Users.findById(userId);
 	if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
 	res.status(200).json({
-		message: 'Get profile successfully',
-		profile:{
-			avatar: user.avatar,
-			banner: user.banner,
-			name: user.name,
-			email: user.email,
-			gender: user.gender,
-			dob: user.dob
-		}
+		avatar: user.avatar,
+		banner: user.banner,
+		name: user.name,
+		email: user.email,
+		gender: user.gender,
+		dob: user.dob
 	});
 });
 
@@ -220,7 +221,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
 	res.status(200).json({
 		message: 'Update password successfully'
 	});
-})
+});
 
 module.exports = {
 	registerUser,
