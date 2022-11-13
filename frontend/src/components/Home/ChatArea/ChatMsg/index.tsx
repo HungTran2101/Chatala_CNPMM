@@ -33,70 +33,66 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
   }, [data]);
 
   return data.fromSender ? (
-    <>
-      <S.ChatMsgRight position={position}>
-        <S.ChatMsgWrapper>
-          {!data.unSend ? (
-            <>
-              {data.files.length === 0 && <S.ChatMsgTextTail />}
-              {data.msg !== "" && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
-              {images?.length > 0 && (
-                <S.ChatMsgFileImages imgNum={images?.length}>
-                  {images?.map((image, index) => (
-                    <S.ChatMsgFileImage key={index} imgNum={images?.length}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={image.url}
-                        alt="image"
-                        // layout='fill'
-                        // objectFit='cover'
-                        draggable={false}
-                      />
-                    </S.ChatMsgFileImage>
-                  ))}
-                </S.ChatMsgFileImages>
-              )}
-              {data.files.length > 0 && (
-                <S.ChatMsgFiles>
-                  {data.files.map(
-                    (file, index) =>
-                      file.type === "file" && (
-                        <S.ChatMsgFile key={index}>
-                          <S.ChatMsgFileIcon>
-                            {getFileIcon(file)}
-                          </S.ChatMsgFileIcon>
-                          <S.ChatMsgFileName>
-                            {shorterChars(file.name, 25)}
-                          </S.ChatMsgFileName>
-                        </S.ChatMsgFile>
-                      )
-                  )}
-                </S.ChatMsgFiles>
-              )}
-            </>
-          ) : (
-            <S.ChatMsgUnSend>Message has been recovered</S.ChatMsgUnSend>
-          )}
-        </S.ChatMsgWrapper>
-        {!data.unSend && (
-          <S.ChatMsgMoreIconWrapper>
-            <S.ChatMsgMoreIcon onClick={() => setToggleOption(true)} />
-            {toggleOption && (
-              <ChatMsgOption setToggleOption={setToggleOption} />
+    <S.ChatMsgRight position={position}>
+      <S.ChatMsgWrapper>
+        {!data.unSend ? (
+          <>
+            {data.files.length === 0 && <S.ChatMsgTextTail />}
+            {data.msg !== "" && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
+            {images?.length > 0 && (
+              <S.ChatMsgFileImages imgNum={images?.length}>
+                {images?.map((image, index) => (
+                  <S.ChatMsgFileImage key={index} imgNum={images?.length}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={image.url}
+                      alt="image"
+                      // layout='fill'
+                      // objectFit='cover'
+                      draggable={false}
+                    />
+                  </S.ChatMsgFileImage>
+                ))}
+              </S.ChatMsgFileImages>
             )}
-          </S.ChatMsgMoreIconWrapper>
+            {data.files.length > 0 && (
+              <S.ChatMsgFiles>
+                {data.files.map(
+                  (file, index) =>
+                    file.type === "file" && (
+                      <S.ChatMsgFile key={index}>
+                        <S.ChatMsgFileIcon>
+                          {getFileIcon(file)}
+                        </S.ChatMsgFileIcon>
+                        <S.ChatMsgFileName>
+                          {shorterChars(file.name, 25)}
+                        </S.ChatMsgFileName>
+                      </S.ChatMsgFile>
+                    )
+                )}
+              </S.ChatMsgFiles>
+            )}
+          </>
+        ) : (
+          <S.ChatMsgUnSend>Message has been recovered</S.ChatMsgUnSend>
         )}
-      </S.ChatMsgRight>
-    </>
+      </S.ChatMsgWrapper>
+      {!data.unSend && (
+        <S.ChatMsgMoreIconWrapper>
+          <S.ChatMsgMoreIcon onClick={() => setToggleOption(true)} />
+          {toggleOption && <ChatMsgOption setToggleOption={setToggleOption} />}
+        </S.ChatMsgMoreIconWrapper>
+      )}
+    </S.ChatMsgRight>
   ) : (
     <S.ChatMsgLeft position={position}>
       {context.roomInfo && (
         <S.ChatMsgAvatar position={position}>
-          <img
+          <Image
             src={context.roomInfo.roomAvatar}
             alt="avatar"
-            // layout="fill"
-            // objectFit="contain"
+            layout="fill"
+            objectFit="contain"
           />
         </S.ChatMsgAvatar>
       )}
