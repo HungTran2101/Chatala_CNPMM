@@ -14,4 +14,6 @@ export const API_URL = {
   facebookLogin: `${API_BASE}/auth/facebook/`,
   googleLogin: `${API_BASE}/auth/google/`,
   linkedinLogin: `${API_BASE}/auth/linkedin/`,
+  getRoomList: `${API_BASE}/room`,
+  getRoomInfo: `${API_BASE}/room`
 };

@@ -8,18 +8,54 @@ export type messageSendType = {
 
 export type messageType = {
   roomId: string;
-  senderId: string;
+  fromSender: boolean;
   msg: string;
-  files: { name: string, url: string; type: string }[];
+  files: { name: string; url: string; type: string }[];
   unSend: boolean;
   deleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
 };
 
-export type roomType = {
+export type roomInfo = {
   roomName: string;
-  isGroup: boolean;
-  users: { avatar: string; role: boolean; name: string }[];
+  roomAvatar: string;
+  roomInfo: {
+    createdAt: string;
+    groupName: string;
+    isGroup: boolean;
+    lastMsg: string;
+    updatedAt: string;
+    users: RoomUser[];
+    __v: number;
+    _id: string;
+  };
 };
+
+export type RoomUser = {
+  avatar: string;
+  nickName: string;
+  role: boolean;
+  uid: string;
+  _id: string;
+};
+
+// export type roomListType = {
+//   roomName: string;
+//   roomAvatar: string;
+//   room: {
+//     createdAt: string;
+//     groupName: string;
+//     isGroup: boolean;
+//     lastMsg: string;
+//     updatedAt: string;
+//     users: RoomUser[];
+//     __v: number;
+//     _id: string;
+//   };
+// }[];
 
 export type registerType = {
   name: string;

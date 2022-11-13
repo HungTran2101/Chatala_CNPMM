@@ -1,12 +1,13 @@
-import ChatPreviewItem from '../ChatPreviewItem';
-import * as S from './ChatList.styled';
-import React from 'react';
-import { useGlobalContext } from '../../../../contexts/globalContext';
+import ChatPreviewItem from "../ChatPreviewItem";
+import * as S from "./ChatList.styled";
+import React, { useEffect } from "react";
+import { useGlobalContext } from "../../../../contexts/globalContext";
 import {
   ChatListArray,
   ChatMsgArray,
   UserAvatar,
-} from '../../../../utils/dataConfig';
+} from "../../../../utils/dataConfig";
+import { RoomApi } from "../../../../services/api/room";
 
 interface IChatList {
   selected: number;
@@ -16,34 +17,30 @@ interface IChatList {
 const ChatList = ({ selected, setSelected }: IChatList) => {
   const context = useGlobalContext();
 
-  const roomSelect = (index: number) => {
-    context.setRoomMsg(ChatMsgArray[index]);
-    context.setRoomInfo({
-      roomName: index % 2 === 0 ? '' : 'Group Chat',
-      isGroup: index % 2 === 0 ? false : true,
-      users: [
-        { avatar: UserAvatar, role: false, name: 'Ng Van A' },
-        { avatar: UserAvatar, role: true, name: 'Ng Van B' },
-      ],
-    });
+  const roomSelect = async (index: number) => {
+    const result = await RoomApi.getRoomInfo(context.roomList[index].roomInfo._id)
+    
+    context.setRoomInfo({roomName: result.roomName,roomInfo: result.roomInfo, roomAvatar: result.roomAvatar})
+    context.setRoomMsg(result.messages)
   };
 
   return (
     <S.ChatList>
       <S.Wrapper>
-        {ChatListArray.map((data, index) => (
-          <React.Fragment key={index}>
-            <ChatPreviewItem
-              avatar={UserAvatar}
-              msg={data.msg}
-              name={data.name}
-              id={index}
-              active={selected === index}
-              setSelected={setSelected}
-              onClick={() => roomSelect(index)}
-            />
-          </React.Fragment>
-        ))}
+        {context.roomList.length > 0 &&
+          context.roomList.map((data, index) => (
+            <React.Fragment key={index}>
+              <ChatPreviewItem
+                avatar={data.roomAvatar}
+                msg={data.roomInfo.lastMsg}
+                name={data.roomName}
+                id={index}
+                active={selected === index}
+                setSelected={setSelected}
+                onClick={() => roomSelect(index)}
+              />
+            </React.Fragment>
+          ))}
       </S.Wrapper>
     </S.ChatList>
   );
