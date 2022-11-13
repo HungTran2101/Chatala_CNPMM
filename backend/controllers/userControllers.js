@@ -130,8 +130,6 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
 	sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
 
-	console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
-
 	res.cookie('UID', encrypter.encrypt(prefixForgotPassword + user._id.toString()), cookieOptions);
 	res.status(200).json({
 		message: 'Check your email to reset your password'
@@ -175,13 +173,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findOneAndUpdate({ _id: req.user._id }, { avatar, name, gender, dob });
 	if (!user) return next(new ErrorHandler('User not found', 404));
 
-	res.status(200).json({
-		avatar,
-		name,
-		gender,
-		dob,
-		email: user.email
-	});
+	res.status(200).json(user);
 });
 
 const getUserProfile = asyncHandler(async (req, res, next) => {
@@ -189,14 +181,7 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 	const user = await Users.findById(userId);
 	if (!user) return next(new ErrorHandler('Get profile failed', 404));
 
-	res.status(200).json({
-		avatar: user.avatar,
-		banner: user.banner,
-		name: user.name,
-		email: user.email,
-		gender: user.gender,
-		dob: user.dob
-	});
+	res.status(200).json(user);
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
