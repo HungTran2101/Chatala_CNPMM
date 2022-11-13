@@ -43,9 +43,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 	const encryptedUID = encrypter.encrypt(prefixRegister + newUser._id.toString());
 	res.cookie('UID', encryptedUID, {
 		signed: true,
-		httpOnly: true,
-		secure: true,
-		sameSite: 'none'
+		httpOnly: true
 		// secure: true,
 	});
 
@@ -81,7 +79,9 @@ const loginUser = asyncHandler(async (req, res, next) => {
 		if (await user.matchPassword(password)) {
 			res.cookie('token', generateJWT(user._id), {
 				signed: true,
-				httpOnly: true
+				httpOnly: true,
+				secure: true,
+				sameSite: 'none'
 				// secure: true,
 			});
 			res.status(200).json({
