@@ -12,6 +12,7 @@ import { UsersApi } from '../../../services/api/users';
 const TopBar = () => {
   const [userInfoModal, setUserInfoModal] = useState(false);
   const [activeNotiModal, setActiveNotiModal] = useState(false);
+  const [activeFriendModal, setActiveFriendModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
   const [profileData, setProfileData] = useState<any>();
 
@@ -46,7 +47,10 @@ const TopBar = () => {
           </S.LogoContainer>
           <S.Search>
             <S.SearchIcon />
-            <S.SearchInput placeholder='Search...' />
+            <S.SearchInput placeholder='Search...' onClick={()=> setActiveFriendModal(true)} />
+            {activeFriendModal && (
+              <NotiModal isFriendRequest={true} setActiveNotiModal={setActiveFriendModal} />
+            )}
           </S.Search>
           <S.Option>
             <S.OptionNotify onClick={() => setActiveNotiModal(true)} />

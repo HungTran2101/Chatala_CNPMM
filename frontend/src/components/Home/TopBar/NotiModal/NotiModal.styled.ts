@@ -1,13 +1,19 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import tw from "twin.macro";
 import { merge, zoomIn, slideInRight, slideInDown } from "react-animations";
 
 const cbAnimate1 = merge(slideInRight, slideInDown)
 const NotiAnimate = keyframes`${merge(zoomIn, cbAnimate1)}`;
 
-export const Noti = styled.div`
+export const Noti = styled.div<{ isFriendRequest?: boolean }>`
   ${tw`bg-secondary flex flex-col py-2.5 px-3.5 rounded-[25px] absolute shadow-md right-[170px] top-[35px] z-10 border-darker border-2`}
   animation: 0.2s ${NotiAnimate};
+
+  ${(props) =>
+    props.isFriendRequest &&
+    css`
+      ${tw`right-[95px]`}
+    `}
 `;
 
 export const NotiTitles = styled.div`
