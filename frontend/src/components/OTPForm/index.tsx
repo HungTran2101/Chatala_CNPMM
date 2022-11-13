@@ -27,23 +27,7 @@ const OTPCode = (props: any) => {
   const context = useGlobalContext();
 
   const handleSubmit = (values: any, { setSubmitting }: any) => {
-    window.confirmationResult
-      .confirm(values.otpCode)
-      .then(() => {
-        setCheckError("false");
-
-        const data: User  = {
-          name: context.registerInfo.name,
-          phone: context.registerInfo.phoneNumber,
-          password: context.registerInfo.password
-        }
-                
-        UsersApi.create(data);
-      })
-      .catch(() => {
-        setCheckError("true");
-        setSubmitting(false);
-      });
+    
   };
 
   useEffect(() => {

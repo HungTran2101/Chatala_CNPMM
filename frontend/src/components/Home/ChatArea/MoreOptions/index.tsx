@@ -29,7 +29,7 @@ const MoreOptions = ({ setToggleOption, roomInfo }: IMoreOptions) => {
           {roomInfo.isGroup && <S.RoomInfoNameEditIcon />}
         </S.RoomInfoName>
       </S.RoomInfo>
-      <S.NormalItem>Friend's profile</S.NormalItem>
+      <S.NormalItem>Friend&apos;s profile</S.NormalItem>
       {!roomInfo.isGroup && <S.NormalItem>Change Nickname</S.NormalItem>}
       {roomInfo.isGroup && <S.NormalItem>Group Members</S.NormalItem>}
       <S.DeteleItem>Block</S.DeteleItem>
