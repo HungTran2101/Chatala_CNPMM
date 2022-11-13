@@ -10,22 +10,24 @@ const sendMessage = asyncHandler(async (req, res, next) => {
   const { roomId, msg, files } = req.body;
   const { id } = decodeJWT(req.signedCookies.token);
 
-  const result = await Messages.create({
-    roomId,
-    senderId: id,
-    msg,
-    files,
-  });
-  if (result) {
-    const lastMsg = msg !== '' ? msg : files[0].name;
-    const room = await Rooms.findByIdAndUpdate(
-      roomId,
-      { lastMsg },
-      { new: true }
-    );
+  console.log(req.body);
 
-    sendToClients(room, msg, id);
-  }
+  // const result = await Messages.create({
+  //   roomId,
+  //   senderId: id,
+  //   msg,
+  //   files,
+  // });
+  // if (result) {
+  //   const lastMsg = msg !== '' ? msg : files[0].name;
+  //   const room = await Rooms.findByIdAndUpdate(
+  //     roomId,
+  //     { lastMsg },
+  //     { new: true }
+  //   );
+
+  //   sendToClients(room, msg, id);
+  // }
 
   res.status(200).json({
     result,

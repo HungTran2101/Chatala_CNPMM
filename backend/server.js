@@ -40,6 +40,8 @@ app.get('/', (req, res) => {
 
 //route
 app.use('/api/user', userRoutes);
+app.use('/api/message', messageRoutes);
+app.use('/api/friend', friendRoutes);
 
 //middleware
 app.use(errorMiddleware); //handle error

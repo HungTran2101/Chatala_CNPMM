@@ -1,8 +1,10 @@
-const asyncHandler = require("express-async-handler");
-const Notifications = require("../models/notificationModel");
-const { decodeJWT } = require("../utils/utilFunctions");
-const Friends = require("../models/friendModel");
-const ObjectId = require("mongodb").ObjectId;
+const asyncHandler = require('express-async-handler');
+const Notifications = require('../models/notificationModel');
+const { decodeJWT } = require('../utils/utilFunctions');
+const Friends = require('../models/friendModel');
+const ObjectId = require('mongodb').ObjectId;
+const Rooms = require('../models/roomModel');
+const Users = require('../models/userModel');
 
 const friendReq = asyncHandler(async (req, res, next) => {
   const { id } = decodeJWT(req.signedCookies.token);
@@ -15,7 +17,7 @@ const friendReq = asyncHandler(async (req, res, next) => {
     },
     {
       $set: {
-        status: "Pending",
+        status: 'Pending',
       },
     }
   );
@@ -27,18 +29,22 @@ const friendReq = asyncHandler(async (req, res, next) => {
     });
 
   res.status(200).json({
-    message: "Request successfully",
+    message: 'Request successfully',
   });
 });
 
 const friendAccept = asyncHandler(async (req, res, next) => {
   const notificationId = req.params.id;
 
+  const accepterName = req.user.name;
+
+  const requesterName = req.body.requesterName;
+
   const notification = await Notifications.findOneAndUpdate(
     notificationId,
     {
       $set: {
-        status: "Accepted",
+        status: 'Accepted',
       },
     },
     { new: true }
@@ -62,7 +68,7 @@ const friendAccept = asyncHandler(async (req, res, next) => {
       uid2: notification.receiveId,
       $set: {
         status: {
-          type: "available",
+          type: 'available',
           blockedId: undefined,
         },
       },
@@ -70,8 +76,23 @@ const friendAccept = asyncHandler(async (req, res, next) => {
     { upsert: true }
   );
 
+  await Rooms.create({
+    roomName: '',
+    isGroup: false,
+    users: [
+      {
+        uid: notification.requestId,
+        nickName: requesterName,
+      },
+      {
+        uid: notification.receiveId,
+        nickName: accepterName,
+      },
+    ],
+  });
+
   res.status(200).json({
-    message: "Accept successfully",
+    message: 'Accept successfully',
   });
 });
 
@@ -80,12 +101,12 @@ const friendDecline = asyncHandler(async (req, res, next) => {
 
   await Notifications.findOneAndUpdate(id, {
     $set: {
-      status: "Denied",
+      status: 'Denied',
     },
   });
 
   res.status(200).json({
-    message: "Decline successfully",
+    message: 'Decline successfully',
   });
 });
 
@@ -111,35 +132,35 @@ const block = asyncHandler(async (req, res, next) => {
       uid1: id,
       uid2: uid2,
       status: {
-        type: "oneWayBlock",
+        type: 'oneWayBlock',
         blockedId: uid2,
       },
     });
     return res.status(200).json({
-      message: "Block successfully",
+      message: 'Block successfully',
     });
   } else {
     if (
       friend.status &&
-      friend.status.type === "oneWayBlock" &&
+      friend.status.type === 'oneWayBlock' &&
       friend.status.blockedId.toString() === id
     ) {
       await Friends.findByIdAndUpdate(
         friend.id,
         {
           $set: {
-            status: { type: "twoWayBlock", blockedId: undefined },
+            status: { type: 'twoWayBlock', blockedId: undefined },
           },
         },
         { new: true }
       );
     }
-    if (friend.status && friend.status.type === "available") {
+    if (friend.status && friend.status.type === 'available') {
       await Friends.findByIdAndUpdate(
         friend.id,
         {
           $set: {
-            status: { type: "oneWayBlock", blockedId: uid2 },
+            status: { type: 'oneWayBlock', blockedId: uid2 },
           },
         },
         { new: true }
@@ -148,7 +169,7 @@ const block = asyncHandler(async (req, res, next) => {
   }
 
   return res.status(200).json({
-    message: "Block successfully",
+    message: 'Block successfully',
   });
 });
 
@@ -157,12 +178,12 @@ const unblock = asyncHandler(async (req, res, next) => {
 
   await Notifications.findOneAndUpdate(id, {
     $set: {
-      status: "Denied",
+      status: 'Denied',
     },
   });
 
   res.status(200).json({
-    message: "Unblock successfully",
+    message: 'Unblock successfully',
   });
 });
 
