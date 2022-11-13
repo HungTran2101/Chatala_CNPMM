@@ -43,7 +43,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
 	const encryptedUID = encrypter.encrypt(prefixRegister + newUser._id.toString());
 	res.cookie('UID', encryptedUID, {
 		signed: true,
-		httpOnly: true
+		httpOnly: true,
+		secure: true,
+		sameSite: 'none'
 		// secure: true,
 	});
 
