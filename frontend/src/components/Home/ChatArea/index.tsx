@@ -19,7 +19,7 @@ const Stomp = require('stompjs');
 
 type FormValues = {
   msg: string;
-  files: Array<File>;
+  files: Array<string>;
 };
 
 const ChatArea = () => {
@@ -82,15 +82,22 @@ const ChatArea = () => {
     setFieldValue: any
   ) => {
     if (e.currentTarget.files) {
-      const newFiles = e.currentTarget.files;
-
-      const files = values.files;
-      for (let i = 0; i < newFiles.length; i++) {
-        files.push(newFiles[i]);
+      const reader = new FileReader();
+      for (let i = 0; i < e.currentTarget.files.length; i++) {
+        reader.readAsDataURL(e.currentTarget.files[i])
+        reader.onloadend = () => {
+        }
       }
+      // reader.readAsDataURL(file);
+      // const newFiles = e.currentTarget.files;
 
-      setFieldValue('files', files);
-      e.currentTarget.value = '';
+      // const files = values.files;
+      // for (let i = 0; i < newFiles.length; i++) {
+      //   files.push(newFiles[i]);
+      // }
+      // console.log(files)
+      // setFieldValue('files', files);
+      // e.currentTarget.value = '';
     }
   };
 
@@ -101,7 +108,7 @@ const ChatArea = () => {
   ) => {
     const files = values.files;
     for (let i = 0; i < newFiles.length; i++) {
-      files.push(newFiles[i]);
+      // files.push(newFiles[i]);
     }
 
     setFieldValue('files', files);
@@ -116,7 +123,7 @@ const ChatArea = () => {
         .sendMessage({
           roomId: context.roomInfo.roomInfo._id,
           msg: values.msg,
-          //   files: String;
+          // files: String;
         })
         .then(res => {
           res.result.fromSender = true;

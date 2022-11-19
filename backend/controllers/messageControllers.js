@@ -15,7 +15,7 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     roomId,
     senderId: id,
     msg,
-    // files,
+    files,
   });
   if (result) {
     const lastMsg = msg !== '' ? msg : files[0].name;
