@@ -3,6 +3,8 @@ const Messages = require('../models/messageModel');
 const Rooms = require('../models/roomModel');
 const { decodeJWT } = require('../utils/utilFunctions');
 
+const { uploadImage } = require('../utils/uploadImage');
+
 const { sendToClients } = require('../utils/NotificationService');
 
 // save message
@@ -11,14 +13,25 @@ const sendMessage = asyncHandler(async (req, res, next) => {
 
   const id = req.user._id;
 
+  const UploadedLink = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const str = await uploadImage(files[i]);
+    UploadedLink.push({
+      url: str,
+      name: '',
+      type: 'string',
+    });
+  }
+
   const result = await Messages.create({
     roomId,
     senderId: id,
     msg,
-    files,
+    files: UploadedLink,
   });
   if (result) {
-    const lastMsg = msg !== '' ? msg : files[0].name;
+    const lastMsg = msg !== '' ? msg : 'img';
     const room = await Rooms.findByIdAndUpdate(
       roomId,
       { lastMsg },

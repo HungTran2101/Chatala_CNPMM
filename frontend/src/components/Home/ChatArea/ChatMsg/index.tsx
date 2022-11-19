@@ -1,11 +1,11 @@
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useGlobalContext } from "../../../../contexts/globalContext";
-import { UserAvatar } from "../../../../utils/dataConfig";
-import { messageType } from "../../../../utils/types";
-import { getFileIcon, shorterChars } from "../../../Global/ProcessFunctions";
-import * as S from "./ChatMsg.styled";
-import ChatMsgOption from "./ChatMsgOption";
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useGlobalContext } from '../../../../contexts/globalContext';
+import { UserAvatar } from '../../../../utils/dataConfig';
+import { messageType } from '../../../../utils/types';
+import { getFileIcon, shorterChars } from '../../../Global/ProcessFunctions';
+import * as S from './ChatMsg.styled';
+import ChatMsgOption from './ChatMsgOption';
 
 interface IChatMsg {
   data: messageType;
@@ -22,8 +22,8 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
 
   const getImageList = () => {
     const _images: Array<{ name: string; url: string; type: string }> = [];
-    data.files.forEach((file) => {
-      if (file.type === "image") _images.push(file);
+    data.files.forEach(file => {
+      if (file.type === 'image') _images.push(file);
     });
     setImages(_images);
   };
@@ -38,7 +38,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
         {!data.unSend ? (
           <>
             {data.files.length === 0 && <S.ChatMsgTextTail />}
-            {data.msg !== "" && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
+            {data.msg !== '' && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
             {images?.length > 0 && (
               <S.ChatMsgFileImages imgNum={images?.length}>
                 {images?.map((image, index) => (
@@ -46,7 +46,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={image.url}
-                      alt="image"
+                      alt='image'
                       // layout='fill'
                       // objectFit='cover'
                       draggable={false}
@@ -59,14 +59,20 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
               <S.ChatMsgFiles>
                 {data.files.map(
                   (file, index) =>
-                    file.type === "file" && (
+                    file.type === 'file' && (
                       <S.ChatMsgFile key={index}>
-                        <S.ChatMsgFileIcon>
+                        {/* <S.ChatMsgFileIcon>
                           {getFileIcon(file)}
                         </S.ChatMsgFileIcon>
                         <S.ChatMsgFileName>
                           {shorterChars(file.name, 25)}
-                        </S.ChatMsgFileName>
+                        </S.ChatMsgFileName> */}
+                        <Image
+                          src={file.url}
+                          alt='avatar'
+                          layout='fill'
+                          objectFit='contain'
+                        />
                       </S.ChatMsgFile>
                     )
                 )}
@@ -90,9 +96,9 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
         <S.ChatMsgAvatar position={position}>
           <Image
             src={context.roomInfo.roomAvatar}
-            alt="avatar"
-            layout="fill"
-            objectFit="contain"
+            alt='avatar'
+            layout='fill'
+            objectFit='contain'
           />
         </S.ChatMsgAvatar>
       )}
@@ -109,7 +115,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                   <S.ChatMsgFileImage key={index} imgNum={images?.length}>
                     <img
                       src={image.url}
-                      alt="image"
+                      alt='image'
                       // layout='fill'
                       // objectFit='cover'
                       draggable={false}
@@ -122,7 +128,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
               <S.ChatMsgFiles>
                 {data.files.map(
                   (file, index) =>
-                    file.type === "file" && (
+                    file.type === 'file' && (
                       <S.ChatMsgFile key={index}>
                         <S.ChatMsgFileIcon>
                           {getFileIcon(file)}

@@ -2,9 +2,9 @@ import http from '../http';
 import { API_URL } from './urls';
 
 type readyMessage = {
-  roomId: String;
-  msg: String;
-  //   files: String;
+  roomId: string;
+  msg: string;
+  files: string[];
 };
 
 export const messageApi = {

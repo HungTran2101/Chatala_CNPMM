@@ -7,7 +7,7 @@ import {
 } from '../../../Global/ProcessFunctions';
 
 interface IFilePreview {
-  files: Array<File>;
+  files: Array<string>;
   index: number;
   setFieldValue: any;
 }
@@ -18,11 +18,11 @@ const FilePreview = ({ files, index, setFieldValue }: IFilePreview) => {
     setFieldValue('files', files);
   };
 
-  return validImageTypes.includes(files[index].type) ? (
+  return files[index].length > 0 ? (
     <S.FilePreviewImage>
       <S.FilePreviewImageFigure>
         <Image
-          src={URL.createObjectURL(files[index])}
+          src={files[index]}
           alt='imagePreview'
           objectFit='cover'
           layout='fill'
@@ -31,13 +31,14 @@ const FilePreview = ({ files, index, setFieldValue }: IFilePreview) => {
       <S.FilePreviewRemove onClick={removeFile} />
     </S.FilePreviewImage>
   ) : (
-    <S.FilePreview>
-      <S.FilePreviewIcon>{getFileIcon(files[index])}</S.FilePreviewIcon>
-      <S.FilePreviewName>
-        {shorterChars(files[index].name, 25)}
-      </S.FilePreviewName>
-      <S.FilePreviewRemove onClick={removeFile} />
-    </S.FilePreview>
+    <></>
+    // <S.FilePreview>
+    //   <S.FilePreviewIcon>{getFileIcon(files[index])}</S.FilePreviewIcon>
+    //   <S.FilePreviewName>
+    //     {shorterChars(files[index].name, 25)}
+    //   </S.FilePreviewName>
+    //   <S.FilePreviewRemove onClick={removeFile} />
+    // </S.FilePreview>
   );
 };
 

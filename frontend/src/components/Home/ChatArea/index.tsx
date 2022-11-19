@@ -19,7 +19,7 @@ const Stomp = require('stompjs');
 
 type FormValues = {
   msg: string;
-  files: Array<string>;
+  files: Array<any>;
 };
 
 const ChatArea = () => {
@@ -82,22 +82,16 @@ const ChatArea = () => {
     setFieldValue: any
   ) => {
     if (e.currentTarget.files) {
-      const reader = new FileReader();
+      const files = values.files;
       for (let i = 0; i < e.currentTarget.files.length; i++) {
-        reader.readAsDataURL(e.currentTarget.files[i])
+        const reader = new FileReader();
+        reader.readAsDataURL(e.currentTarget.files[i]);
         reader.onloadend = () => {
-        }
+          files.push(reader.result);
+          setFieldValue('files', files);
+        };
       }
-      // reader.readAsDataURL(file);
-      // const newFiles = e.currentTarget.files;
-
-      // const files = values.files;
-      // for (let i = 0; i < newFiles.length; i++) {
-      //   files.push(newFiles[i]);
-      // }
-      // console.log(files)
-      // setFieldValue('files', files);
-      // e.currentTarget.value = '';
+      e.currentTarget.value = '';
     }
   };
 
@@ -123,7 +117,7 @@ const ChatArea = () => {
         .sendMessage({
           roomId: context.roomInfo.roomInfo._id,
           msg: values.msg,
-          // files: String;
+          files: values.files,
         })
         .then(res => {
           res.result.fromSender = true;
@@ -168,6 +162,7 @@ const ChatArea = () => {
   useEffect(() => {
     connectServer();
     console.log('useEffect');
+    console.log(listMessage[0]);
   }, []);
 
   return (
