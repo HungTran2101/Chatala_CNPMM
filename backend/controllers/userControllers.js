@@ -93,7 +93,7 @@ const verifyAccount = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  const user = await Users.findOne({ email });
+  const user = await Users.findOneAndUpdate({_id: req.user._id},{ online: true });
 
   if (user && user.active) {
     if (await user.matchPassword(password)) {
@@ -114,6 +114,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 const logout = asyncHandler(async (req, res, next) => {
+  await Users.findOneAndUpdate({_id: req.user._id},{ online: false });
   res.clearCookie('token');
   res.clearCookie('UID');
   res.status(200).json({
