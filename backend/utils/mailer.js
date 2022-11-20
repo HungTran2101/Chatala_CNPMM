@@ -23,7 +23,7 @@ const sendEmail = async (email, subject, text) => {
 	if (constants.NODE_ENV === 'PRODUCTION') {
 		await transporter.sendMail(mailOptions);
 	} else {
-		console.log('\x1b[36m%s\x1b[0m', 'Verified Token: ' + verifiedtoken);
+		console.log(text);
 	}
 };
 
