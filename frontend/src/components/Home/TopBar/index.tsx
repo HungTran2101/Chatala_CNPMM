@@ -8,6 +8,7 @@ import NotiModal from './NotiModal';
 import { useGlobalContext } from '../../../contexts/globalContext';
 import SettingsModal from './SettingsModal';
 import { UsersApi } from '../../../services/api/users';
+import { useRouter } from 'next/router';
 
 const TopBar = () => {
   const [userInfoModal, setUserInfoModal] = useState(false);
@@ -15,12 +16,23 @@ const TopBar = () => {
   const [activeFriendModal, setActiveFriendModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
   const [profileData, setProfileData] = useState<any>();
-
+  const router = useRouter();
   const getProfile = async () => {
     const result = await UsersApi.profile();
     setProfileData(result);
     sessionStorage.setItem('userId', result._id);
   };
+
+  const handleLogout = async () => {
+    try {
+      const result = await UsersApi.logout();
+      if(result) {
+        router.push('/login');
+      }
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }
 
   useEffect(() => {
     getProfile();
@@ -70,7 +82,7 @@ const TopBar = () => {
                 setSettingVisible={() => setSettingVisible(false)}
               />
             )}
-            <S.OptionLogOut />
+            <S.OptionLogOut onClick={()=>handleLogout()} />
           </S.Option>
         </S.RightWrapper>
         {userInfoModal && (

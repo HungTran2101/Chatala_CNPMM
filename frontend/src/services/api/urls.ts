@@ -5,6 +5,7 @@ const API_BASE = `${BASEURL}/api`;
 
 export const API_URL = {
   register: `${API_BASE}/user/register`,
+  otpRegister: `${API_BASE}/user/register/verify-account`,
   login: `${API_BASE}/user/login`,
   getStatus: `${API_BASE}/room/getStatus`,
   updateProfile: `${API_BASE}/user/update-profile`,
@@ -12,6 +13,7 @@ export const API_URL = {
   logout: `${API_BASE}/user/logout`,
   authSocialSettings: `${API_BASE}/auth/social/settings/`,
   resetPassword: `${API_BASE}/auth/password/reset/`,
+  changePassword: `${API_BASE}/user/update-password`,
   facebookLogin: `${API_BASE}/auth/facebook/`,
   googleLogin: `${API_BASE}/auth/google/`,
   linkedinLogin: `${API_BASE}/auth/linkedin/`,

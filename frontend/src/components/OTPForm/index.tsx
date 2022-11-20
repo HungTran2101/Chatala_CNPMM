@@ -15,19 +15,25 @@ type User = {
 };
 
 const OTPCode = (props: any) => {
-  const router = useRouter();
   const [checkError, setCheckError] = useState("false");
   const [countdown, setCountdown] = useState(30);
   const [hiddenButton, setHiddenButton] = useState(true);
-
+  const router = useRouter()
   const initialValues = {
-    otpCode: "",
+    verifiedtoken: "",
   };
 
   const context = useGlobalContext();
 
-  const handleSubmit = (values: any, { setSubmitting }: any) => {
-    
+  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    try {
+      const result = await UsersApi.otpRegister(values)
+      if (result ) {
+        router.push('/login')
+      }
+    } catch (error) {
+      alert('error')
+    }
   };
 
   useEffect(() => {
@@ -65,7 +71,7 @@ const OTPCode = (props: any) => {
             <S.SetWidth>
               <S.Input
                 placeholder="Verification OTP code"
-                name="otpCode"
+                name="verifiedtoken"
                 checkerror={checkError}
               />
               {checkError === "true" && <S.ErrorMsg>Incorrect otp!</S.ErrorMsg>}

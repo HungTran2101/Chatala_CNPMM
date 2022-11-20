@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import tw from 'twin.macro';
-
+import { Form } from 'formik';
 export const ChangePassword = styled.div`
   ${tw`px-[30px] py-5`}
 `;
 
-export const Form = styled.div`
+export const NewForm = styled(Form)`
   ${tw`flex flex-col`}
 `;
 
@@ -27,7 +27,7 @@ export const Label = styled.label<{ active: boolean }>`
 `;
 
 export const ErrorMsg = styled.div`
-  ${tw``}
+  ${tw`text-base text-[red]`}
 `;
 
 export const Button = styled.button`

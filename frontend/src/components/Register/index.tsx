@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import * as S from "./Register.styled";
 import * as Yup from "yup";
 import { useGlobalContext } from "../../contexts/globalContext";
+import { UsersApi } from "../../services/api/users";
 
 type FormValue = {
   name: string;
@@ -45,12 +46,15 @@ const Register = () => {
       .oneOf([Yup.ref("password"), null], "Passwords must match."),
   });
 
-  const requestOTP = async (email: string) => {};
+  const requestOTP = async (email: string) => {
+
+  };
 
   const handleSubmit = async (values: FormValue, { resetForm }: any) => {
     console.log(values);
-    await requestOTP(values.email);
-
+    // await requestOTP(values.email);
+    const result = await UsersApi.register(values)
+    console.log('result: ', result)
     context.setRegisterInfo(values);
 
     resetForm();
