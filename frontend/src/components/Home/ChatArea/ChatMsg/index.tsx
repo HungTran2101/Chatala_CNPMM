@@ -44,11 +44,13 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                 {data.files.map((image, index) => (
                   <S.ChatMsgFileImage key={index} imgNum={data.files.length}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={image.url}
                       alt='image'
-                      // layout='fill'
-                      // objectFit='cover'
+                      layout='responsive'
+                      width={100}
+                      height={100}
+                      objectFit={'contain'}
                       draggable={false}
                     />
                   </S.ChatMsgFileImage>
@@ -86,7 +88,11 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
       {context.roomInfo && (
         <S.ChatMsgAvatar position={position}>
           <Image
-            src={context.roomInfo.roomAvatar}
+            src={
+              context.roomInfo.roomAvatar
+                ? context.roomInfo.roomAvatar
+                : 'https://res.cloudinary.com/dapbgcbjp/image/upload/v1668934480/remptqclwgivbojzvuat.jpg'
+            }
             alt='avatar'
             layout='fill'
             objectFit='contain'
@@ -104,11 +110,13 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
               <S.ChatMsgFileImages imgNum={data.files.length}>
                 {data.files.map((image, index) => (
                   <S.ChatMsgFileImage key={index} imgNum={data.files.length}>
-                    <img
+                    <Image
                       src={image.url}
                       alt='image'
-                      // layout='fill'
-                      // objectFit='cover'
+                      layout='responsive'
+                      width={100}
+                      height={100}
+                      objectFit={'contain'}
                       draggable={false}
                     />
                   </S.ChatMsgFileImage>

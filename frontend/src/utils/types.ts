@@ -26,7 +26,7 @@ export type roomInfo = {
     createdAt: string;
     groupName: string;
     isGroup: boolean;
-    lastMsg: string;
+    lastMsg: { text: string; senderId: string };
     updatedAt: string;
     users: RoomUser[];
     __v: number;

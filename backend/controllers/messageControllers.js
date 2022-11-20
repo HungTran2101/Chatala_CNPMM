@@ -5,7 +5,7 @@ const { decodeJWT } = require('../utils/utilFunctions');
 
 const { uploadImage } = require('../utils/uploadImage');
 
-const { sendToClients } = require('../utils/NotificationService');
+const { sendMessageToClients } = require('../utils/NotificationService');
 
 // save message
 const sendMessage = asyncHandler(async (req, res, next) => {
@@ -31,14 +31,18 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     files: UploadedLink,
   });
   if (result) {
-    const lastMsg = msg !== '' ? msg : 'img';
+    msg !== '' ? msg : 'Hình Ảnh';
+    const lastMsg = {
+      text: msg,
+      senderId: id,
+    };
     const room = await Rooms.findByIdAndUpdate(
       roomId,
       { lastMsg },
       { new: true }
     );
 
-    sendToClients(room, result, id);
+    sendMessageToClients(room, result, id);
   }
 
   res.status(200).json({

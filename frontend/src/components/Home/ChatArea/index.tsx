@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 import FilePreview from './FilePreview';
 import DropZone from 'react-dropzone';
-import { messageType } from '../../../utils/types';
+import { messageType, roomInfo } from '../../../utils/types';
 import SockJS from 'sockjs-client';
 import { messageApi } from '../../../services/api/messages';
 import { BASEURL } from '../../../services/api/urls';
@@ -43,26 +43,34 @@ const ChatArea = () => {
     setFieldValue('msg', chatInput.current?.innerText);
   };
 
+  const [listMessage, setListMessage] = useState<any>(context.roomMsg);
+
+  const [room, setRoom] = useState<roomInfo>(context.roomInfo);
+
   //Message
   const setMessagePosition = (data: messageType, index: number) => {
     const roomMsg = listMessage;
 
+    // console.log(roomMsg[0]);
+
     if (
       data.fromSender !== roomMsg[index + 1]?.fromSender &&
       data.fromSender === roomMsg[index - 1]?.fromSender
-    )
+    ) {
       return 'top';
-    else if (
+    } else if (
       data.fromSender === roomMsg[index - 1]?.fromSender &&
       data.fromSender === roomMsg[index + 1]?.fromSender
-    )
+    ) {
       return 'middle';
-    else if (
+    } else if (
       data.fromSender !== roomMsg[index - 1]?.fromSender &&
       data.fromSender !== roomMsg[index + 1]?.fromSender
-    )
+    ) {
       return 'alone';
-    else return 'bottom';
+    } else {
+      return 'bottom';
+    }
   };
 
   //Form
@@ -148,14 +156,18 @@ const ChatArea = () => {
     );
   };
 
-  const [listMessage, setListMessage] = useState<any>(context.roomMsg);
-
   const onPrivateMessage = (message: any) => {
     message.body.replace('\\', '');
 
     const newMessage = JSON.parse(message.body);
 
-    console.log(newMessage);
+    setRoom(
+      ...room,
+      (room.roomInfo.lastMsg = {
+        text: newMessage.msg,
+        senderId: newMessage.senderId,
+      })
+    );
 
     setListMessage((listMessage: any) => [newMessage, ...listMessage]);
   };
@@ -172,7 +184,11 @@ const ChatArea = () => {
           {context.roomInfo.roomName !== '-1' && (
             <S.ChatAreaHeadAvatar>
               <Image
-                src={context.roomInfo.roomAvatar}
+                src={
+                  context.roomInfo.roomAvatar
+                    ? context.roomInfo.roomAvatar
+                    : 'https://res.cloudinary.com/dapbgcbjp/image/upload/v1668934480/remptqclwgivbojzvuat.jpg'
+                }
                 alt='avatar'
                 layout='fill'
                 objectFit='contain'

@@ -1,10 +1,11 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import * as S from './ChatPreviewItem.styled';
 
 interface IChatPreviewItem {
   avatar?: string;
   active: boolean;
-  msg: string;
+  msg: { text: string; senderId: string };
   name?: string;
   id: number;
   setSelected: (id: number) => void;
@@ -20,6 +21,11 @@ const ChatPreviewItem = ({
   setSelected,
   onClick,
 }: IChatPreviewItem) => {
+  const [userId, setUserId] = useState<string | null>('');
+  useEffect(() => {
+    setUserId(sessionStorage.getItem('userId'));
+  }, []);
+
   return (
     <S.ChatPreviewItem active={active} Id={id} onClick={onClick}>
       <S.Wrapper onClick={() => setSelected(id)}>
@@ -37,7 +43,9 @@ const ChatPreviewItem = ({
         )}
         <S.Content>
           <S.Name>{name}</S.Name>
-          <S.Msg>{msg}</S.Msg>
+          <S.Msg>
+            {msg.senderId == userId ? 'Bạn: ' + msg.text : msg.text}
+          </S.Msg>
         </S.Content>
       </S.Wrapper>
     </S.ChatPreviewItem>
