@@ -67,6 +67,7 @@ const SearchModal = ({
                 </S.SearchModalAvatar>
                 <S.SearchModalNameWrapper>
                   <S.SearchModalName>{data.name}</S.SearchModalName>
+                  <p>{data.email}</p>
                 </S.SearchModalNameWrapper>
               </S.SearchModalInfo>
               {data.status === 'available' ? (
