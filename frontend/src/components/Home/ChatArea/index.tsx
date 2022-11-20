@@ -161,13 +161,13 @@ const ChatArea = () => {
 
     const newMessage = JSON.parse(message.body);
 
-    setRoom(
-      ...room,
-      (room.roomInfo.lastMsg = {
-        text: newMessage.msg,
-        senderId: newMessage.senderId,
-      })
-    );
+    const newRoom = room;
+    newRoom.roomInfo.lastMsg = {
+      text: newMessage.msg,
+      senderId: newMessage.senderId,
+    };
+
+    setRoom(newRoom);
 
     setListMessage((listMessage: any) => [newMessage, ...listMessage]);
   };
