@@ -11,6 +11,18 @@ const startNotificationServive = server => {
     protocol: 'sockjs',
     heartbeat: [0, 0],
   });
+
+  stompServer.subscribe('/server', (data, headers) => {
+    data = JSON.parse(data);
+    if (data.state == true) {
+    } else {
+      User.findOneAndUpdate(data.userId, { online: false });
+    }
+  });
+
+  stompServer.onDisconnect(result => {
+    console.log('result', result);
+  });
 };
 
 const sendMessageToClients = (room, result, _senderId) => {

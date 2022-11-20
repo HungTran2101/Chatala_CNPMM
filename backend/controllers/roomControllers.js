@@ -77,7 +77,7 @@ const getRoomInfo = asyncHandler(async (req, res, next) => {
   }
 });
 
-const getStatus = asyncHandler(async (req, res, next) => {
+const getStatus = asyncHandler(async (req, res) => {
   const roomId = req.params.roomId;
   const room = await Rooms.findById(roomId);
   let friendID_Array = [];
@@ -88,12 +88,16 @@ const getStatus = asyncHandler(async (req, res, next) => {
 
   const ListFriends = await Users.find({ _id: { $in: friendID_Array } });
 
-  ListFriends.forEach(f => {
-    if (f.online == true) {
-      res.json({ online: true });
+  let result = false;
+
+  for (let i = 0; i < ListFriends.length; i++) {
+    if (ListFriends.at(i).online === true) {
+      result = true;
+      break;
     }
-  });
-  res.json({ online: false });
+  }
+
+  res.json({ online: result });
 });
 
 module.exports = { getRoomList, getRoomInfo, getStatus };

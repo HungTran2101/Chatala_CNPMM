@@ -18,8 +18,6 @@ const Home = () => {
 
   const [room, setRoom] = useState<roomInfo>(context.roomInfo);
 
-  const [sendService, setSendService] = useState<any>('');
-
   const [userId, setUserId] = useState<any>('');
 
   const getRoomData = async () => {
@@ -42,7 +40,6 @@ const Home = () => {
         stompClient.subscribe('/user/' + userId, (message: any) =>
           onPrivateMessage(message)
         );
-        setSendService(stompClient);
       },
       () => {
         alert('disconnected from server');
