@@ -17,13 +17,6 @@ const TopNav = ({ setSelected }: ITopNav) => {
       <S.Options>
         <S.AddOption onClick={() => setToggleCreateGroup(true)} />
       </S.Options>
-      <ChatPreviewItem
-        id={-2}
-        active={false}
-        msg='Halo halo niece and nephew, today uncle Roger'
-        setSelected={setSelected}
-        onClick={() => context.setRoomMsg([])}
-      />
       {toggleCreateGroup && <CreateGroup setToggleCreateGroup={setToggleCreateGroup} />}
     </S.Wrapper>
   );
