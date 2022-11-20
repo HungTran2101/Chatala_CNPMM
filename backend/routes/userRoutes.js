@@ -12,6 +12,7 @@ const {
   getUserProfile,
   updatePassword,
   logout,
+  getFriends,
 } = require('../controllers/userControllers');
 
 const router = express.Router();
@@ -19,7 +20,7 @@ const router = express.Router();
 router.route('/register').post(registerUser);
 router.route('/register/verify-account').post(verifyAccount);
 router.route('/login').post(loginUser);
-router.route('/logout').post(authMiddleware,logout);
+router.route('/logout').post(authMiddleware, logout);
 router.route('/forgot-password').post(forgotPassword);
 router.route('/forgot-password/verify-token').post(verifyToken);
 router.route('/forgot-password/reset-password').post(resetPassword);
@@ -28,5 +29,6 @@ router.route('/update-profile').post(authMiddleware, updateProfile);
 router.route('/profile').get(authMiddleware, getUserProfile);
 router.route('/update-password').post(authMiddleware, updatePassword);
 router.route('/:userId/profile').get(getUserProfile);
+router.route('/getFriends').get(authMiddleware, getFriends);
 
 module.exports = router;

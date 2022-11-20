@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
+import { UsersApi } from '../../../../../services/api/users';
 import { NotiListArray } from '../../../../../utils/dataConfig';
 import * as S from './CreateGroup.styled';
 
@@ -7,6 +9,12 @@ interface ICreateGroup {
 }
 
 const CreateGroup = ({ setToggleCreateGroup }: ICreateGroup) => {
+  useEffect(() => {
+    UsersApi.getFriends().then(res => {
+      console.log(res);
+    });
+  });
+
   return (
     <S.CreateGroupModal>
       <S.CreateGroupOverlay onClick={() => setToggleCreateGroup(false)} />

@@ -7,6 +7,7 @@ export const API_URL = {
   register: `${API_BASE}/user/register`,
   otpRegister: `${API_BASE}/user/register/verify-account`,
   login: `${API_BASE}/user/login`,
+  getFriends: `${API_BASE}/user/getFriends`,
   getStatus: `${API_BASE}/room/getStatus`,
   updateProfile: `${API_BASE}/user/update-profile`,
   profile: `${API_BASE}/user/profile`,
