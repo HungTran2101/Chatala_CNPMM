@@ -6,6 +6,7 @@ const API_BASE = `${BASEURL}/api`;
 export const API_URL = {
   register: `${API_BASE}/user/register`,
   login: `${API_BASE}/user/login`,
+  getStatus: `${API_BASE}/room/getStatus`,
   updateProfile: `${API_BASE}/user/update-profile`,
   profile: `${API_BASE}/user/profile`,
   logout: `${API_BASE}/user/logout`,

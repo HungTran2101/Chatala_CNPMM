@@ -13,10 +13,7 @@ const roomSchema = mongoose.Schema(
         avatar: { type: String, trim: true },
       },
     ],
-    lastMsg: {
-      text: { type: String, require: true },
-      senderId: { type: String, require: true },
-    },
+    lastMsg: { text: String, senderId: String },
   },
   { timestamps: true }
 );

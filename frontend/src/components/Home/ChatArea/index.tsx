@@ -15,15 +15,29 @@ import { messageType, roomInfo } from '../../../utils/types';
 import SockJS from 'sockjs-client';
 import { messageApi } from '../../../services/api/messages';
 import { BASEURL } from '../../../services/api/urls';
-const Stomp = require('stompjs');
+import axios from 'axios';
+import { UsersApi } from '../../../services/api/users';
+import { RoomApi } from '../../../services/api/room';
 
 type FormValues = {
   msg: string;
   files: Array<any>;
 };
 
-const ChatArea = () => {
-  const status = 1;
+interface IChatArea {
+  listMessage: any;
+  setListMessage: any;
+  room: any;
+  setRoom: any;
+}
+
+const ChatArea = ({
+  listMessage,
+  setListMessage,
+  room,
+  setRoom,
+}: IChatArea) => {
+  const [status, setStatus] = useState(1);
 
   const context = useGlobalContext();
 
@@ -43,15 +57,9 @@ const ChatArea = () => {
     setFieldValue('msg', chatInput.current?.innerText);
   };
 
-  const [listMessage, setListMessage] = useState<any>(context.roomMsg);
-
-  const [room, setRoom] = useState<roomInfo>(context.roomInfo);
-
   //Message
   const setMessagePosition = (data: messageType, index: number) => {
     const roomMsg = listMessage;
-
-    // console.log(roomMsg[0]);
 
     if (
       data.fromSender !== roomMsg[index + 1]?.fromSender &&
@@ -118,8 +126,11 @@ const ChatArea = () => {
 
   const onSubmit = (values: FormValues, { setFieldValue }: any) => {
     if (values.msg !== '' || values.files.length > 0) {
-      console.log(values);
       setToggleEmoji(false);
+
+      if (values.msg === '') {
+        values.msg = 'Hình Ảnh';
+      }
 
       messageApi
         .sendMessage({
@@ -130,6 +141,15 @@ const ChatArea = () => {
         .then(res => {
           res.result.fromSender = true;
           chatInput.current!.innerText = '';
+          const newRoom = room;
+
+          newRoom.roomInfo.lastMsg = {
+            text: values.msg,
+            senderId: sessionStorage.getItem('userId'),
+          };
+
+          setRoom(newRoom);
+
           setListMessage((listMessage: any) => [res.result, ...listMessage]);
           setFieldValue('msg', '');
           setFieldValue('files', []);
@@ -137,44 +157,12 @@ const ChatArea = () => {
     }
   };
 
-  const connectServer = () => {
-    let Sock = new SockJS(BASEURL + '/ws');
-    let stompClient = Stomp.over(Sock);
-    stompClient.debug = null;
-    stompClient.heartbeat = 0;
-    stompClient.connect(
-      {},
-      () => {
-        stompClient.subscribe(
-          '/user/' + sessionStorage.getItem('userId'),
-          (message: any) => onPrivateMessage(message)
-        );
-      },
-      () => {
-        alert('disconnected from server');
-      }
-    );
-  };
-
-  const onPrivateMessage = (message: any) => {
-    message.body.replace('\\', '');
-
-    const newMessage = JSON.parse(message.body);
-
-    const newRoom = room;
-    newRoom.roomInfo.lastMsg = {
-      text: newMessage.msg,
-      senderId: newMessage.senderId,
-    };
-
-    setRoom(newRoom);
-
-    setListMessage((listMessage: any) => [newMessage, ...listMessage]);
-  };
-
   useEffect(() => {
-    connectServer();
-    console.log('useEffect');
+    RoomApi.getStatus(context.roomInfo.roomInfo._id.toString()).then(res => {
+      if (res.online !== true) {
+        setStatus(0);
+      }
+    });
   }, []);
 
   return (
@@ -202,7 +190,7 @@ const ChatArea = () => {
               </S.ChatAreaHeadName>
             )}
             <S.ChatAreaHeadStatus>
-              {status ? 'Online' : 'Offline'}
+              {status == 1 ? 'Online' : 'Offline'}
               <S.ChatAreaHeadStatusIcon status={status} />
             </S.ChatAreaHeadStatus>
           </S.ChatAreaHeadNameWrapper>

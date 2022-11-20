@@ -1,13 +1,13 @@
-import ChatPreviewItem from "../ChatPreviewItem";
-import * as S from "./ChatList.styled";
-import React, { useEffect } from "react";
-import { useGlobalContext } from "../../../../contexts/globalContext";
+import ChatPreviewItem from '../ChatPreviewItem';
+import * as S from './ChatList.styled';
+import React, { useEffect } from 'react';
+import { useGlobalContext } from '../../../../contexts/globalContext';
 import {
   ChatListArray,
   ChatMsgArray,
   UserAvatar,
-} from "../../../../utils/dataConfig";
-import { RoomApi } from "../../../../services/api/room";
+} from '../../../../utils/dataConfig';
+import { RoomApi } from '../../../../services/api/room';
 
 interface IChatList {
   selected: number;
@@ -28,7 +28,7 @@ const ChatList = ({ selected, setSelected }: IChatList) => {
       roomAvatar: result.roomAvatar,
     });
     context.setRoomMsg(result.messages);
-    context.setRoomChoosen(true)
+    context.setRoomChoosen(true);
   };
 
   return (

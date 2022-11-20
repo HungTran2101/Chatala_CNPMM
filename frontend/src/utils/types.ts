@@ -26,7 +26,7 @@ export type roomInfo = {
     createdAt: string;
     groupName: string;
     isGroup: boolean;
-    lastMsg: { text: string; senderId: string };
+    lastMsg: { text: string; senderId: string | null };
     updatedAt: string;
     users: RoomUser[];
     __v: number;
@@ -40,6 +40,7 @@ export type RoomUser = {
   role: boolean;
   uid: string;
   _id: string;
+  online: boolean;
 };
 
 // export type roomListType = {

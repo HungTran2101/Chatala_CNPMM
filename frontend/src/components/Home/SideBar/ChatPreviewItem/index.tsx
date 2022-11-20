@@ -5,7 +5,7 @@ import * as S from './ChatPreviewItem.styled';
 interface IChatPreviewItem {
   avatar?: string;
   active: boolean;
-  msg: { text: string; senderId: string };
+  msg: { text: string; senderId: string | null };
   name?: string;
   id: number;
   setSelected: (id: number) => void;
@@ -44,7 +44,7 @@ const ChatPreviewItem = ({
         <S.Content>
           <S.Name>{name}</S.Name>
           <S.Msg>
-            {msg.senderId == userId ? 'Bạn: ' + msg.text : msg.text}
+            {msg?.senderId == userId ? 'Bạn: ' + msg?.text : msg?.text}
           </S.Msg>
         </S.Content>
       </S.Wrapper>

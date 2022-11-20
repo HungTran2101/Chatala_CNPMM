@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema(
       unique: [true, 'Email existed'],
     },
     verifiedtoken: {
-      type: Number
+      type: Number,
     },
     active: {
       type: Boolean,
@@ -36,6 +36,7 @@ const userSchema = mongoose.Schema(
     },
     gender: { type: String, default: 'male' },
     dob: { type: Date, default: new Date() },
+    online: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
