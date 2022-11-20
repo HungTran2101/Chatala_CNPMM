@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { UsersApi } from '../../../../../services/api/users';
 import { NotiListArray } from '../../../../../utils/dataConfig';
 import * as S from './CreateGroup.styled';
@@ -9,11 +9,27 @@ interface ICreateGroup {
 }
 
 const CreateGroup = ({ setToggleCreateGroup }: ICreateGroup) => {
+  const [listFriends, setListFriends] = useState<any>([]);
+
   useEffect(() => {
     UsersApi.getFriends().then(res => {
       console.log(res);
+      setListFriends(res);
     });
-  });
+  }, []);
+
+  const [listMembers, setListMenbers] = useState<any>([]);
+
+  const handleAdd = (id: any, name: any, avatar: any) => {
+    const newMember = { id: id, name: name, avatar: avatar };
+    setListMenbers((listMembers: any) => [...listMembers, newMember]);
+  };
+
+  const handleCreate = () => {
+    UsersApi.createGroup(listMembers).then(res => {
+      console.log(res);
+    });
+  };
 
   return (
     <S.CreateGroupModal>
@@ -24,7 +40,7 @@ const CreateGroup = ({ setToggleCreateGroup }: ICreateGroup) => {
           <S.CreateGroupSearchIcon />
           <S.CreateGroupSearchInput placeholder='Search with name or phone number...' />
         </S.CreateGroupSearch>
-        {NotiListArray.map((data, index) => (
+        {listFriends.map((data: any, index: number) => (
           <S.CreateGroupItem key={index}>
             <S.CreateGroupInfo>
               <S.CreateGroupAvatar>
@@ -32,9 +48,19 @@ const CreateGroup = ({ setToggleCreateGroup }: ICreateGroup) => {
               </S.CreateGroupAvatar>
               <S.CreateGroupName>{data.name}</S.CreateGroupName>
             </S.CreateGroupInfo>
-            <S.CreateGroupOption>Add</S.CreateGroupOption>
+            <S.CreateGroupOption
+              onClick={() => handleAdd(data._id, data.name, data.avatar)}
+            >
+              Add
+            </S.CreateGroupOption>
           </S.CreateGroupItem>
         ))}
+        <div>
+          {listMembers.map((data: any, index: number) => (
+            <div key={index}>{data.name}</div>
+          ))}
+        </div>
+        <button onClick={() => handleCreate()}>Create</button>
       </S.CreateGroupBody>
     </S.CreateGroupModal>
   );

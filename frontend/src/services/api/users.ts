@@ -39,6 +39,9 @@ export const UsersApi = {
   getFriends: async function (): Promise<any> {
     return await http.get(API_URL.getFriends);
   },
+  createGroup: async function (data: any): Promise<any> {
+    return await http.post(API_URL.createGroup, data);
+  },
   logout: async function (): Promise<any> {
     return await http.post(API_URL.logout);
   },

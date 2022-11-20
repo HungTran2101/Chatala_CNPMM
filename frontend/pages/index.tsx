@@ -14,7 +14,7 @@ const Stomp = require('stompjs');
 
 const Home = () => {
   const context = useGlobalContext();
-  const router = useRouter()
+  const router = useRouter();
 
   const [listMessage, setListMessage] = useState<any>(context.roomMsg);
 
@@ -28,9 +28,9 @@ const Home = () => {
       context.setRoomList(rooms.result);
     } catch (err: any) {
       console.log(err);
-      if(err.statusCode === 401 && err.errors.message === 'Unauthorization!') {
-        alert('Your session is over, redirecting to login page')
-        router.push('/login')
+      if (err.statusCode === 401 && err.errors.message === 'Unauthorization!') {
+        alert('Your session is over, redirecting to login page');
+        router.push('/login');
       }
     }
   };
@@ -82,6 +82,10 @@ const Home = () => {
     setUserId(sessionStorage.getItem('userId'));
     getRoomData();
   }, []);
+
+  useEffect(() => {
+    setListMessage(context.roomMsg);
+  }, [context.roomMsg]);
 
   useEffect(() => {
     if (userId !== '') {

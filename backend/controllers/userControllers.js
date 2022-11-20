@@ -350,15 +350,17 @@ const getFriends = asyncHandler(async (req, res) => {
     $or: [{ uid1: { $eq: userId } }, { uid2: { $eq: userId } }],
   });
 
-  let listFriends = [];
+  let listFriendsId = [];
 
   listAssociate.forEach(a => {
-    if (a.uid1 === userId) {
-      listFriends.push(a.uid2);
+    if (a.uid1.toString() === userId.toString()) {
+      listFriendsId.push(a.uid2);
     } else {
-      listFriends.push(a.uid1);
+      listFriendsId.push(a.uid1);
     }
   });
+
+  const listFriends = await Users.find({ _id: { $in: listFriendsId } });
 
   res.json(listFriends);
 });

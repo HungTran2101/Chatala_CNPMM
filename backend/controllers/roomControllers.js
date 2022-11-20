@@ -4,9 +4,12 @@ const Messages = require('../models/messageModel');
 const ErrorHandler = require('../utils/errorHandler');
 const mongoose = require('mongoose');
 const Users = require('../models/userModel');
+const { ObjectId } = require('mongodb');
 
 const getRoomList = asyncHandler(async (req, res, next) => {
   const rooms = await Rooms.find({ 'users.uid': req.user._id });
+
+  console.log(rooms);
 
   let result = [];
   if (rooms.length > 0) {
@@ -21,6 +24,13 @@ const getRoomList = asyncHandler(async (req, res, next) => {
             ? room.users[1].avatar
             : room.users[0].avatar;
         result.push({ roomName, roomAvatar, roomInfo: room });
+      } else {
+        result.push({
+          roomName: room.groupName,
+          roomAvatar:
+            'https://res.cloudinary.com/vhg2901/image/upload/v1668091622/iaaqgtk4jhwe8hv2moi6.jpg',
+          roomInfo: room,
+        });
       }
     });
 
@@ -39,7 +49,9 @@ const getRoomInfo = asyncHandler(async (req, res, next) => {
   });
   const messageList = await Messages.find({
     roomId: mongoose.Types.ObjectId(roomId),
-  }).sort({ updatedAt: -1 });
+  })
+    .sort({ updatedAt: -1 })
+    .limit(15);
 
   let messages = [];
   messageList.forEach(message => {
@@ -58,8 +70,9 @@ const getRoomInfo = asyncHandler(async (req, res, next) => {
   let roomName = roomInfo.users[0].nickName;
 
   if (roomInfo.isGroup) {
-    roomAvatar = '';
-    roomName = '';
+    roomAvatar =
+      'https://res.cloudinary.com/vhg2901/image/upload/v1668091622/iaaqgtk4jhwe8hv2moi6.jpg';
+    roomName = roomInfo.groupName;
   } else if (roomInfo.users[1].uid.toString() !== req.user._id.toString()) {
     roomAvatar = roomInfo.users[1].avatar;
     roomName = roomInfo.users[1].nickName;
@@ -103,4 +116,39 @@ const getStatus = asyncHandler(async (req, res) => {
   res.json({ online: result });
 });
 
-module.exports = { getRoomList, getRoomInfo, getStatus };
+const createGroup = asyncHandler(async (req, res) => {
+  const data = req.body;
+
+  const user = await Users.findOne({ _id: req.user._id });
+
+  let groupName = '';
+  let users = [];
+
+  data.map(d => {
+    groupName += d.name.toString() + ',';
+    users.push({
+      uid: ObjectId(d.id),
+      nickName: d.name,
+      avatar: d.avatar,
+    });
+  });
+
+  groupName += user.name.toString();
+
+  users.push({
+    uid: user._id,
+    nickName: user.name,
+    avatar: user.avatar,
+  });
+
+  Rooms.create({
+    groupName: groupName,
+    isGroup: true,
+    users: users,
+    lastMsg: { text: '', senderId: '' },
+  });
+
+  res.json(true);
+});
+
+module.exports = { getRoomList, getRoomInfo, getStatus, createGroup };
