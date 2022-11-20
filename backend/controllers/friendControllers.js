@@ -40,7 +40,7 @@ const friendAccept = asyncHandler(async (req, res, next) => {
 
   const requesterName = req.body.requesterName;
 
-  const notification = await Notifications.findOneAndUpdate(
+  const notification = await Notifications.findByIdAndUpdate(
     notificationId,
     {
       $set: {
@@ -49,6 +49,8 @@ const friendAccept = asyncHandler(async (req, res, next) => {
     },
     { new: true }
   );
+
+  console.log(notification);
 
   await Friends.findOneAndUpdate(
     {

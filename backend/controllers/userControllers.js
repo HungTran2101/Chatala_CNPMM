@@ -93,8 +93,8 @@ const verifyAccount = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  const user = await Users.findOneAndUpdate({_id: req.user._id},{ online: true });
-
+  const user = await Users.findOneAndUpdate({email: email},{ online: true });
+  console.log(user);
   if (user && user.active) {
     if (await user.matchPassword(password)) {
       res.cookie('token', generateJWT(user._id), cookieOptions);
