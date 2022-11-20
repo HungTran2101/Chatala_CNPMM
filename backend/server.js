@@ -24,14 +24,20 @@ process.on('uncaughtException', err => {
 dotenv.config();
 
 const corsOptions = {
-  origin: ['https://chatala.vercel.app','https://chatala.vercel.app/','http://localhost:3000','http://localhost:3000/'],
+  origin: [
+    'https://chatala.vercel.app',
+    'https://chatala.vercel.app/',
+    'http://localhost:3000',
+    'http://localhost:3000/',
+  ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 
 const app = express();
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors(corsOptions));
-app.use(express.json()); //allow accept json data
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.get('/', (req, res) => {
@@ -42,13 +48,18 @@ app.get('/', (req, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/friend', friendRoutes);
-app.use('/api/util', utilRoutes)
+app.use('/api/util', utilRoutes);
 app.use('/api/room', roomRoutes);
 
 //middleware
 app.use(errorMiddleware); //handle error
 
-console.log(bcrypt.compareSync('Test123456','$2a$10$FD0lXGNTM6NX1ZGEOHCS4.Ye8OepcZ8KY1D7UOSi488mNlDbK8OBe'));
+console.log(
+  bcrypt.compareSync(
+    'Test123456',
+    '$2a$10$FD0lXGNTM6NX1ZGEOHCS4.Ye8OepcZ8KY1D7UOSi488mNlDbK8OBe'
+  )
+);
 
 // add httpserver
 const server = http.createServer(app);

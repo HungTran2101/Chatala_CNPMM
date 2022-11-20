@@ -45,7 +45,7 @@ const ChatArea = () => {
 
   //Message
   const setMessagePosition = (data: messageType, index: number) => {
-    const roomMsg = context.roomMsg;
+    const roomMsg = listMessage;
 
     if (
       data.fromSender !== roomMsg[index + 1]?.fromSender &&
@@ -153,16 +153,16 @@ const ChatArea = () => {
   const onPrivateMessage = (message: any) => {
     message.body.replace('\\', '');
 
-    setListMessage((listMessage: any) => [
-      JSON.parse(message.body),
-      ...listMessage,
-    ]);
+    const newMessage = JSON.parse(message.body);
+
+    console.log(newMessage);
+
+    setListMessage((listMessage: any) => [newMessage, ...listMessage]);
   };
 
   useEffect(() => {
     connectServer();
     console.log('useEffect');
-    console.log(listMessage[0]);
   }, []);
 
   return (

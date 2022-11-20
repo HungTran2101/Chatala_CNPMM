@@ -28,9 +28,9 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
     setImages(_images);
   };
 
-  useEffect(() => {
-    getImageList();
-  }, [data]);
+  // useEffect(() => {
+  //   getImageList();
+  // }, [data]);
 
   return data.fromSender ? (
     <S.ChatMsgRight position={position}>
@@ -38,11 +38,11 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
         {!data.unSend ? (
           <>
             {data.files.length === 0 && <S.ChatMsgTextTail />}
-            {data.msg !== '' && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
-            {images?.length > 0 && (
-              <S.ChatMsgFileImages imgNum={images?.length}>
-                {images?.map((image, index) => (
-                  <S.ChatMsgFileImage key={index} imgNum={images?.length}>
+            {data.msg.length > 0 && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
+            {data.files.length > 0 && (
+              <S.ChatMsgFileImages imgNum={data.files.length}>
+                {data.files.map((image, index) => (
+                  <S.ChatMsgFileImage key={index} imgNum={data.files.length}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={image.url}
@@ -55,29 +55,20 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                 ))}
               </S.ChatMsgFileImages>
             )}
-            {data.files.length > 0 && (
+            {/* {data.files.length > 0 && (
               <S.ChatMsgFiles>
-                {data.files.map(
-                  (file, index) =>
-                    file.type === 'file' && (
-                      <S.ChatMsgFile key={index}>
-                        {/* <S.ChatMsgFileIcon>
-                          {getFileIcon(file)}
-                        </S.ChatMsgFileIcon>
-                        <S.ChatMsgFileName>
-                          {shorterChars(file.name, 25)}
-                        </S.ChatMsgFileName> */}
-                        <Image
-                          src={file.url}
-                          alt='avatar'
-                          layout='fill'
-                          objectFit='contain'
-                        />
-                      </S.ChatMsgFile>
-                    )
-                )}
+                {data.files.map((file, index) => (
+                  <S.ChatMsgFile key={index}>
+                    <Image
+                      src={file.url}
+                      alt='avatar'
+                      layout='fill'
+                      objectFit='contain'
+                    />
+                  </S.ChatMsgFile>
+                ))}
               </S.ChatMsgFiles>
-            )}
+            )} */}
           </>
         ) : (
           <S.ChatMsgUnSend>Message has been recovered</S.ChatMsgUnSend>
@@ -108,11 +99,11 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
           <S.ChatMsgUnSend>Message has been recovered</S.ChatMsgUnSend>
         ) : (
           <>
-            <S.ChatMsgText>{data.msg}</S.ChatMsgText>
-            {images?.length > 0 && (
-              <S.ChatMsgFileImages imgNum={images?.length}>
-                {images?.map((image, index) => (
-                  <S.ChatMsgFileImage key={index} imgNum={images?.length}>
+            {data.msg.length > 0 && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
+            {data.files.length > 0 && (
+              <S.ChatMsgFileImages imgNum={data.files.length}>
+                {data.files.map((image, index) => (
+                  <S.ChatMsgFileImage key={index} imgNum={data.files.length}>
                     <img
                       src={image.url}
                       alt='image'
@@ -124,7 +115,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                 ))}
               </S.ChatMsgFileImages>
             )}
-            {data.files.length > 0 && (
+            {/* {data.files.length > 0 && (
               <S.ChatMsgFiles>
                 {data.files.map(
                   (file, index) =>
@@ -140,7 +131,7 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
                     )
                 )}
               </S.ChatMsgFiles>
-            )}
+            )} */}
           </>
         )}
       </S.ChatMsgWrapper>
