@@ -163,6 +163,7 @@ const ChatArea = ({
         setStatus(0);
       }
     });
+    setListMessage(context.roomMsg);
   }, []);
 
   return (
