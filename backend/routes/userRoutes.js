@@ -11,25 +11,7 @@ const {
   updateProfile,
   getUserProfile,
   updatePassword,
-<<<<<<< Updated upstream
-  logout
-} = require("../controllers/userControllers");
-
-const router = express.Router();
-
-router.route("/register").post(registerUser);
-router.route("/register/verify-account").post(verifyAccount);
-router.route("/login").post(loginUser);
-router.route("/logout").post(logout);
-router.route("/forgot-password").post(forgotPassword);
-router.route("/forgot-password/verify-token").post(verifyToken);
-router.route("/forgot-password/reset-password").post(resetPassword);
-router.route("/find").post(authMiddleware, findUser);
-router.route("/update-profile").post(authMiddleware, updateProfile);
-router.route("/profile").get(authMiddleware, getUserProfile);
-router.route("/update-password").post(authMiddleware, updatePassword);
-router.route("/:userId/profile").get(getUserProfile);
-=======
+  logout,
 } = require('../controllers/userControllers');
 
 const router = express.Router();
@@ -37,6 +19,7 @@ const router = express.Router();
 router.route('/register').post(registerUser);
 router.route('/register/verify-account').post(verifyAccount);
 router.route('/login').post(loginUser);
+router.route('/logout').post(logout);
 router.route('/forgot-password').post(forgotPassword);
 router.route('/forgot-password/verify-token').post(verifyToken);
 router.route('/forgot-password/reset-password').post(resetPassword);
@@ -45,6 +28,5 @@ router.route('/update-profile').post(authMiddleware, updateProfile);
 router.route('/profile').get(authMiddleware, getUserProfile);
 router.route('/update-password').post(authMiddleware, updatePassword);
 router.route('/:userId/profile').get(getUserProfile);
->>>>>>> Stashed changes
 
 module.exports = router;
