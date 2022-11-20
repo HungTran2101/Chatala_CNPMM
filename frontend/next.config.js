@@ -11,15 +11,7 @@ const nextConfig = {
   images: {
     domains: ['icon-library.com', 'localhost', 'res.cloudinary.com'],
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/login',
-        permanent: true,
-      },
-    ]
-  },
+  
 };
 
 module.exports = nextConfig;
