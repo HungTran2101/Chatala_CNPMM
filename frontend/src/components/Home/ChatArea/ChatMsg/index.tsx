@@ -37,7 +37,9 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
       <S.ChatMsgWrapper>
         {!data.unSend ? (
           <>
-            {data.files.length === 0 && <S.ChatMsgTextTail />}
+            {data.msg !== 'Hình Ảnh' && data.msg.length > 0 && (
+              <S.ChatMsgTextTail />
+            )}
             {data.msg.length > 0 && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
             {data.files.length > 0 && (
               <S.ChatMsgFileImages imgNum={data.files.length}>
@@ -105,7 +107,9 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
           <S.ChatMsgUnSend>Message has been recovered</S.ChatMsgUnSend>
         ) : (
           <>
-            {data.msg.length > 0 && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
+            {data.msg !== 'Hình Ảnh' && data.msg.length > 0 && (
+              <S.ChatMsgText>{data.msg}</S.ChatMsgText>
+            )}
             {data.files.length > 0 && (
               <S.ChatMsgFileImages imgNum={data.files.length}>
                 {data.files.map((image, index) => (
