@@ -114,7 +114,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 const logout = asyncHandler(async (req, res, next) => {
-  await Users.findOneAndUpdate({_id: req.user._id},{ online: false });
+  console.log(req.user);
+  await Users.findByIdAndUpdate(req.user._id,{ online: false });
   res.clearCookie('token');
   res.clearCookie('UID');
   res.status(200).json({
