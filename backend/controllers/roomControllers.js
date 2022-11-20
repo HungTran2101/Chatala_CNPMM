@@ -9,8 +9,6 @@ const { ObjectId } = require('mongodb');
 const getRoomList = asyncHandler(async (req, res, next) => {
   const rooms = await Rooms.find({ 'users.uid': req.user._id });
 
-  console.log(rooms);
-
   let result = [];
   if (rooms.length > 0) {
     rooms.forEach(room => {
