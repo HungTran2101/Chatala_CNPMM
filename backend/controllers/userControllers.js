@@ -237,7 +237,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
 
   const hashedPassword = bcrypt.hashSync(newPassword);
   const user = await Users.findById(req.user._id);
-  if(!user || !(await user.matchPassword(password))){
+  if(!user || !(await user.matchPassword(oldPassword))){
     return next(new ErrorHandler('Update password failed', 404));
   }
 
