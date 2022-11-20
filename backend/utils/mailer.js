@@ -20,11 +20,13 @@ const sendEmail = async (email, subject, text) => {
 		text: text
 	};
 
-	if (constants.NODE_ENV === 'PRODUCTION') {
-		await transporter.sendMail(mailOptions);
-	} else {
-		console.log(text);
-	}
+	await transporter.sendMail(mailOptions);
+	console.log(text);
+	// if (constants.NODE_ENV === 'PRODUCTION') {
+	// 	await transporter.sendMail(mailOptions);
+	// } else {
+	// 	console.log(text);
+	// }
 };
 
 module.exports = { sendEmail };
