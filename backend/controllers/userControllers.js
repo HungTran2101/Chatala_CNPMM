@@ -344,6 +344,25 @@ const updatePassword = asyncHandler(async (req, res, next) => {
   });
 });
 
+const getFriends = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const listAssociate = await Friends.find({
+    $or: [{ uid1: { $eq: userId } }, { uid2: { $eq: userId } }],
+  });
+
+  let listFriends = [];
+
+  listAssociate.forEach(a => {
+    if (a.uid1 === userId) {
+      listFriends.push(a.uid2);
+    } else {
+      listFriends.push(a.uid1);
+    }
+  });
+
+  res.json(listFriends);
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -356,4 +375,5 @@ module.exports = {
   getUserProfile,
   updatePassword,
   logout,
+  getFriends,
 };
