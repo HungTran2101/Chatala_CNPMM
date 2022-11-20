@@ -91,7 +91,6 @@ const getStatus = asyncHandler(async (req, res) => {
   let result = false;
 
   for (let i = 0; i < ListFriends.length; i++) {
-    console.log(ListFriends.at(i));
     if (
       ListFriends.at(i).online === true &&
       ListFriends.at(i)._id.toString() !== req.user._id.toString()
