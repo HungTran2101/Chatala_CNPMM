@@ -233,14 +233,18 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
-  const { password } = req.body;
+  const { oldPassword ,newPassword } = req.body;
 
-  const hashedPassword = bcrypt.hashSync(password);
-  const user = await Users.findOneAndUpdate(
+  const hashedPassword = bcrypt.hashSync(newPassword);
+  const user = await Users.findById(req.user._id);
+  if(!user || !(await user.matchPassword(password))){
+    return next(new ErrorHandler('Update password failed', 404));
+  }
+
+  await Users.findOneAndUpdate(
     { _id: req.user._id },
     { password: hashedPassword }
   );
-  if (!user) return next(new ErrorHandler('Update password failed', 404));
 
   res.status(200).json({
     message: 'Update password successfully',
