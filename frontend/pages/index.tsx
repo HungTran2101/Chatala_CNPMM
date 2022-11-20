@@ -9,10 +9,12 @@ import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import { BASEURL } from '../src/services/api/urls';
 import { roomInfo } from '../src/utils/types';
+import { useRouter } from 'next/router';
 const Stomp = require('stompjs');
 
 const Home = () => {
   const context = useGlobalContext();
+  const router = useRouter()
 
   const [listMessage, setListMessage] = useState<any>(context.roomMsg);
 
@@ -24,8 +26,12 @@ const Home = () => {
     try {
       const rooms = await RoomApi.getRoomList();
       context.setRoomList(rooms.result);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+      if(err.statusCode === 401 && err.errors.message === 'Unauthorization!') {
+        alert('Your session is over, redirecting to login page')
+        router.push('/login')
+      }
     }
   };
 
