@@ -113,6 +113,14 @@ const loginUser = asyncHandler(async (req, res, next) => {
   }
 });
 
+const logout = asyncHandler(async (req, res, next) => {
+  res.clearCookie('token');
+  res.clearCookie('UID');
+  res.status(200).json({
+    message: 'Logout Successfully!',
+  });
+})
+
 const findUser = asyncHandler(async (req, res, next) => {
   const { search } = req.body;
 
@@ -262,4 +270,5 @@ module.exports = {
   updateProfile,
   getUserProfile,
   updatePassword,
+  logout,
 };
