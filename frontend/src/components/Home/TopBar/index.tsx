@@ -9,6 +9,8 @@ import { useGlobalContext } from '../../../contexts/globalContext';
 import SettingsModal from './SettingsModal';
 import { UsersApi } from '../../../services/api/users';
 import { useRouter } from 'next/router';
+import { SearchResult } from '../../../utils/types';
+import SearchModal from './SearchModal';
 
 const TopBar = () => {
   const [userInfoModal, setUserInfoModal] = useState(false);
@@ -16,6 +18,10 @@ const TopBar = () => {
   const [activeFriendModal, setActiveFriendModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
   const [profileData, setProfileData] = useState<any>();
+  const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchModal, setSearchModal] = useState(false);
+  const [action, setAction] = useState(false);
   const router = useRouter();
   const getProfile = async () => {
     const result = await UsersApi.profile();
@@ -26,17 +32,46 @@ const TopBar = () => {
   const handleLogout = async () => {
     try {
       const result = await UsersApi.logout();
-      if(result) {
+      if (result) {
         router.push('/login');
       }
     } catch (error) {
       console.log('error: ', error);
     }
-  }
+  };
 
   useEffect(() => {
     getProfile();
   }, []);
+
+  const getSearchResult = async () => {
+    if (searchInput) {
+      try {
+        const res = await UsersApi.userFind({ search: searchInput });
+        setSearchResult(res.result);
+        setSearchModal(true);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      setSearchResult([]);
+      setSearchModal(false);
+    }
+  };
+
+  useEffect(() => {
+    let t: any;
+    if (!action) {
+      t = setTimeout(() => {
+        getSearchResult();
+      }, 500);
+    } else {
+      getSearchResult();
+      setAction(false);
+    }
+    return () => clearTimeout(t);
+  }, [searchInput, action]);
 
   return (
     <S.Container>
@@ -62,12 +97,15 @@ const TopBar = () => {
             <S.SearchIcon />
             <S.SearchInput
               placeholder='Search...'
-              onClick={() => setActiveFriendModal(true)}
+              onChange={(e) => setSearchInput(e.target.value)}
+              value={searchInput}
+              onFocus={() => setSearchModal(true)}
             />
-            {activeFriendModal && (
-              <NotiModal
-                isFriendRequest={true}
-                setActiveNotiModal={setActiveFriendModal}
+            {searchModal && searchInput && (
+              <SearchModal
+                setSearchModal={setSearchModal}
+                searchResult={searchResult}
+                setAction={setAction}
               />
             )}
           </S.Search>
@@ -82,7 +120,7 @@ const TopBar = () => {
                 setSettingVisible={() => setSettingVisible(false)}
               />
             )}
-            <S.OptionLogOut onClick={()=>handleLogout()} />
+            <S.OptionLogOut onClick={() => handleLogout()} />
           </S.Option>
         </S.RightWrapper>
         {userInfoModal && (

@@ -7,101 +7,72 @@ const Rooms = require('../models/roomModel');
 const Users = require('../models/userModel');
 
 const friendReq = asyncHandler(async (req, res, next) => {
-  const { id } = decodeJWT(req.signedCookies.token);
+  const id = req.user._id;
   const receiveId = req.params.id;
 
-  const notification = await Notifications.findOneAndUpdate(
-    {
-      receiveId: receiveId,
-      requestId: id,
-    },
-    {
-      $set: {
-        status: 'Pending',
+  const friend = await Friends.findOne({
+    $or: [
+      {
+        uid1: id,
+        uid2: receiveId,
       },
-    }
-  );
-
-  !notification &&
-    Notifications.create({
+      {
+        uid1: receiveId,
+        uid2: id,
+      },
+    ],
+  });
+  if (!friend) {
+    await Notifications.create({
       receiveId: receiveId,
       requestId: id,
     });
 
-  res.status(200).json({
-    message: 'Request successfully',
-  });
+    res.status(200).json({
+      message: 'Request successfully',
+    });
+  } else {
+    return next(new ErrorHandler('Unhandled error!', 500));
+  }
 });
 
 const friendAccept = asyncHandler(async (req, res, next) => {
   const notificationId = req.params.id;
-
-  const accepterName = req.user.name;
-
-  const requesterName = req.body.requesterName;
-
-  const notification = await Notifications.findByIdAndUpdate(
-    notificationId,
-    {
-      $set: {
-        status: 'Accepted',
-      },
-    },
-    { new: true }
-  );
-
-  console.log(notification);
-
-  await Friends.findOneAndUpdate(
-    {
-      $or: [
-        {
-          uid1: notification.requestId,
-          uid2: notification.receiveId,
-        },
-        {
-          uid1: notification.receiveId,
-          uid2: notification.requestId,
-        },
-      ],
-    },
-    {
-      uid1: notification.requestId,
-      uid2: notification.receiveId,
-      $set: {
-        status: {
-          type: 'available',
-          blockedId: undefined,
-        },
-      },
-    },
-    { upsert: true }
-  );
-
-  await Rooms.create({
-    roomName: '',
-    isGroup: false,
-    users: [
+  const notification = await Notifications.findById(notificationId);
+  const inRelationship = await Friends.findOne({
+    $or: [
       {
-        uid: notification.requestId,
-        nickName: requesterName,
+        uid1: notification.requestId,
+        uid2: notification.receiveId,
       },
       {
-        uid: notification.receiveId,
-        nickName: accepterName,
+        uid1: notification.receiveId,
+        uid2: notification.requestId,
       },
     ],
   });
-
-  res.status(200).json({
-    message: 'Accept successfully',
-  });
+  if (notification && notification.status == 'Pending' && !inRelationship) {
+    await Notifications.findByIdAndUpdate(notificationId, {
+      $set: {
+        status: 'Accepted',
+      },
+    });
+    await Friends.create({
+      uid1: notification.requestId,
+      uid2: notification.receiveId,
+    });
+    return res.status(200).json({
+      message: 'Accept successfully',
+    });
+  } else {
+    return next(new ErrorHandler('Unhandled error!', 500));
+  }
 });
 
 const friendDecline = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
 
-  await Notifications.findOneAndUpdate(id, {
+  await Notifications.findByIdAndUpdate(id, {
     $set: {
       status: 'Denied',
     },

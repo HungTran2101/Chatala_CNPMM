@@ -20,4 +20,8 @@ export const API_URL = {
   getRoomList: `${API_BASE}/room`,
   getRoomInfo: `${API_BASE}/room`,
   sendMessage: `${API_BASE}/message`,
+  userFind: `${API_BASE}/user/find`,
+  friendRequest: `${API_BASE}/friend/request`,
+  friendAccept: `${API_BASE}/friend/accept`,
+  friendDecline: `${API_BASE}/friend/decline`,
 };
