@@ -96,7 +96,6 @@ const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   const user = await Users.findOneAndUpdate({ email: email }, { online: true });
-  console.log(user);
   if (user && user.active) {
     if (await user.matchPassword(password)) {
       res.cookie('token', generateJWT(user._id), cookieOptions);
@@ -140,7 +139,7 @@ const findUser = asyncHandler(async (req, res, next) => {
     ],
   });
   let listRelatedId = [];
-  myFriends.forEach((it) => {
+  myFriends.forEach(it => {
     if (it.uid1.toString() === id.toString()) {
       listRelatedId.push({ id: it.uid2.toString(), status: it.status.type });
     } else {
@@ -160,7 +159,7 @@ const findUser = asyncHandler(async (req, res, next) => {
     status: 'Pending',
   });
 
-  pendingId.forEach((it) => {
+  pendingId.forEach(it => {
     if (it.receiveId.toString() === id.toString()) {
       listRelatedId.push({
         id: it.requestId.toString(),
@@ -200,10 +199,10 @@ const findUser = asyncHandler(async (req, res, next) => {
     available: [],
     undefined: [],
   };
-  searchUsers.forEach((it) => {
+  searchUsers.forEach(it => {
     let status = undefined;
     let notificationId = undefined;
-    listRelatedId.forEach((childIt) => {
+    listRelatedId.forEach(childIt => {
       if (it.id === childIt.id) {
         status = childIt.status;
         notificationId = childIt.notificationId;
