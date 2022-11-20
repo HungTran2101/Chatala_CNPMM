@@ -159,6 +159,7 @@ const ChatArea = ({
 
   useEffect(() => {
     RoomApi.getStatus(context.roomInfo.roomInfo._id.toString()).then(res => {
+      console.log(res);
       if (res.online !== true) {
         setStatus(0);
       }
