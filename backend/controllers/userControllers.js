@@ -157,7 +157,13 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   );
   if (!user) return next(new ErrorHandler('Email not found', 404));
 
-  sendEmail(email, 'Reset your password', 'Veriry code: ' + verifiedtoken);
+  sendEmail(
+    email,
+    'Reset your password',
+    'Verified Token: ' + verifiedtoken
+  ).catch(() => {
+    console.log("Can't send email");
+  });
 
   res.cookie(
     'UID',
