@@ -118,10 +118,14 @@ const ChatArea = ({
   ) => {
     const files = values.files;
     for (let i = 0; i < newFiles.length; i++) {
-      // files.push(newFiles[i]);
+      const reader = new FileReader();
+        reader.readAsDataURL(newFiles[i]);
+        reader.onloadend = () => {
+          files.push(reader.result);
+          setFieldValue('files', files);
+        };
     }
 
-    setFieldValue('files', files);
   };
 
   const onSubmit = (values: FormValues, { setFieldValue }: any) => {

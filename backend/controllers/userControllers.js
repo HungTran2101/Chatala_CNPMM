@@ -6,6 +6,8 @@ const {
   decodeJWT,
 } = require('../utils/utilFunctions');
 const ErrorHandler = require('../utils/errorHandler');
+const Friends = require('../models/friendModel');
+const Notifications = require('../models/notificationModel');
 const { sendEmail } = require('../utils/mailer');
 const { Encrypter } = require('../utils/encrypter');
 const bcrypt = require('bcryptjs');
@@ -93,8 +95,7 @@ const verifyAccount = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  const user = await Users.findOneAndUpdate({email: email},{ online: true });
-  console.log(user);
+  const user = await Users.findOneAndUpdate({ email: email }, { online: true });
   if (user && user.active) {
     if (await user.matchPassword(password)) {
       res.cookie('token', generateJWT(user._id), cookieOptions);
@@ -115,34 +116,116 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
 const logout = asyncHandler(async (req, res, next) => {
   console.log(req.user);
-  await Users.findByIdAndUpdate(req.user._id,{ online: false });
+  await Users.findByIdAndUpdate(req.user._id, { online: false });
   res.clearCookie('token');
   res.clearCookie('UID');
   res.status(200).json({
     message: 'Logout Successfully!',
   });
-})
+});
 
 const findUser = asyncHandler(async (req, res, next) => {
   const { search } = req.body;
+  const id = req.user._id;
 
-  const users = await Users.find({
+  const myFriends = await Friends.find({
+    $or: [
+      {
+        uid1: id,
+      },
+      {
+        uid2: id,
+      },
+    ],
+  });
+  let listRelatedId = [];
+  myFriends.forEach(it => {
+    if (it.uid1.toString() === id.toString()) {
+      listRelatedId.push({ id: it.uid2.toString(), status: it.status.type });
+    } else {
+      listRelatedId.push({ id: it.uid1.toString(), status: it.status.type });
+    }
+  });
+
+  const pendingId = await Notifications.find({
+    $or: [
+      {
+        receiveId: id,
+      },
+      {
+        requestId: id,
+      },
+    ],
+    status: 'Pending',
+  });
+
+  pendingId.forEach(it => {
+    if (it.receiveId.toString() === id.toString()) {
+      listRelatedId.push({
+        id: it.requestId.toString(),
+        status: 'receive',
+        notificationId: it.id,
+      });
+    } else {
+      listRelatedId.push({
+        id: it.receiveId.toString(),
+        status: 'request',
+        notificationId: it.id,
+      });
+    }
+  });
+
+  const searchUsers = await Users.find({
     $or: [
       {
         email: {
           $regex: search,
+          $options: 'i',
         },
       },
       {
         name: {
           $regex: search,
+          $options: 'i',
         },
       },
     ],
   }).limit(10);
 
+  let result = [];
+  let tempResult = {
+    receive: [],
+    request: [],
+    available: [],
+    undefined: [],
+  };
+  searchUsers.forEach(it => {
+    let status = undefined;
+    let notificationId = undefined;
+    listRelatedId.forEach(childIt => {
+      if (it.id === childIt.id) {
+        status = childIt.status;
+        notificationId = childIt.notificationId;
+      }
+    });
+    if (it.id.toString() !== id.toString()) {
+      tempResult[status].push({
+        ...it.toObject(),
+        status: status,
+        notificationId: notificationId,
+      });
+    }
+  });
+  result = [
+    ...tempResult.available,
+    ...tempResult.receive,
+    ...tempResult.request,
+    ...tempResult.undefined,
+  ];
+  console.log(tempResult);
+
   res.status(200).json({
-    users,
+    result,
   });
 });
 
@@ -249,11 +332,11 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
-  const { oldPassword ,newPassword } = req.body;
+  const { oldPassword, newPassword } = req.body;
 
   const hashedPassword = bcrypt.hashSync(newPassword);
   const user = await Users.findById(req.user._id);
-  if(!user || !(await user.matchPassword(oldPassword))){
+  if (!user || !(await user.matchPassword(oldPassword))) {
     return next(new ErrorHandler('Update password failed', 404));
   }
 
@@ -265,6 +348,27 @@ const updatePassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     message: 'Update password successfully',
   });
+});
+
+const getFriends = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const listAssociate = await Friends.find({
+    $or: [{ uid1: { $eq: userId } }, { uid2: { $eq: userId } }],
+  });
+
+  let listFriendsId = [];
+
+  listAssociate.forEach(a => {
+    if (a.uid1.toString() === userId.toString()) {
+      listFriendsId.push(a.uid2);
+    } else {
+      listFriendsId.push(a.uid1);
+    }
+  });
+
+  const listFriends = await Users.find({ _id: { $in: listFriendsId } });
+
+  res.json(listFriends);
 });
 
 module.exports = {
@@ -279,4 +383,5 @@ module.exports = {
   getUserProfile,
   updatePassword,
   logout,
+  getFriends,
 };

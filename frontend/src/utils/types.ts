@@ -63,3 +63,18 @@ export type registerType = {
   email: string;
   password: string;
 };
+
+export type SearchResult = {
+  _id: string;
+  avatar: string;
+  banner: string;
+  name: string;
+  email: string;
+  gender: string;
+  dob: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  status: string;
+  notificationId: string;
+};

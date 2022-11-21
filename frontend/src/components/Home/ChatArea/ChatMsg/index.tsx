@@ -38,9 +38,8 @@ const ChatMsg = ({ data, position }: IChatMsg) => {
         {!data.unSend ? (
           <>
             {data.msg !== 'Hình Ảnh' && data.msg.length > 0 && (
-              <S.ChatMsgTextTail />
+              <S.ChatMsgText>{data.msg}</S.ChatMsgText>
             )}
-            {data.msg.length > 0 && <S.ChatMsgText>{data.msg}</S.ChatMsgText>}
             {data.files.length > 0 && (
               <S.ChatMsgFileImages imgNum={data.files.length}>
                 {data.files.map((image, index) => (

@@ -10,7 +10,7 @@ const roomSchema = mongoose.Schema(
         uid: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
         role: { type: Boolean, default: false },
         nickName: { type: String, trim: true, default: '' },
-        avatar: { type: String, trim: true },
+        avatar: { type: String, trim: true, default: 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'},
       },
     ],
     lastMsg: { text: String, senderId: String },

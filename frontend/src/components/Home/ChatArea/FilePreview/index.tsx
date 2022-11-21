@@ -36,7 +36,7 @@ const FilePreview = ({ files, index, setFieldValue }: IFilePreview) => {
     //   <S.FilePreviewIcon>{getFileIcon(files[index])}</S.FilePreviewIcon>
     //   <S.FilePreviewName>
     //     {shorterChars(files[index].name, 25)}
-    //   </S.FilePreviewName>
+    //   </S.FilePreviewName>~
     //   <S.FilePreviewRemove onClick={removeFile} />
     // </S.FilePreview>
   );
